@@ -30,13 +30,37 @@ class BookSearchBloc extends Bloc<BookSearchEvent, BookSearchState> {
       emit(
         BookSearchLoaded(
           books: result.books,
-          hasReachedMax: result.hasMorePages,
+          hasReachedMax:  result.books.length < 20,
           currentPage: 1,
           currentQuery: event.query,
         ),
       );
     } catch (e) {
       emit(BookSearchError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onRefreshSearch(
+      RefreshSearchEvent event,
+      Emitter<BookSearchState> emit,
+      ) async {
+    final currentState = state;
+    if (currentState is BookSearchLoaded) {
+      emit(const BookSearchLoading());
+
+      try {
+        final result = await _searchBooksUseCase(currentState.currentQuery,  1);
+        emit(
+          BookSearchLoaded(
+            books: result.books,
+            hasReachedMax: result.books.length < 20,
+            currentPage: 1,
+            currentQuery: currentState.currentQuery,
+          ),
+        );
+      } catch (e) {
+        emit(BookSearchError(message: e.toString()));
+      }
     }
   }
 
@@ -48,14 +72,6 @@ class BookSearchBloc extends Bloc<BookSearchEvent, BookSearchState> {
     if (currentState is! BookSearchLoaded || currentState.hasReachedMax) {
       return;
     }
-
-    emit(
-      BookSearchLoadingMore(
-        books: currentState.books,
-        currentPage: currentState.currentPage,
-        currentQuery: currentState.currentQuery,
-      ),
-    );
 
     try {
       final result = await _searchBooksUseCase(
@@ -78,31 +94,6 @@ class BookSearchBloc extends Bloc<BookSearchEvent, BookSearchState> {
 
   void _onClearSearch(ClearSearchEvent event, Emitter<BookSearchState> emit) {
     emit(const BookSearchInitial());
-  }
-
-  Future<void> _onRefreshSearch(
-      RefreshSearchEvent event,
-      Emitter<BookSearchState> emit,
-      ) async {
-    final currentState = state;
-    if (currentState is BookSearchLoaded) {
-      emit(const BookSearchLoading());
-
-
-      try {
-        final result = await _searchBooksUseCase(currentState.currentQuery,  1);
-        emit(
-          BookSearchLoaded(
-            books: result.books,
-            hasReachedMax: result.books.length < 20,
-            currentPage: 1,
-            currentQuery: currentState.currentQuery,
-          ),
-        );
-      } catch (e) {
-        emit(BookSearchError(message: e.toString()));
-      }
-    }
   }
 }
 
