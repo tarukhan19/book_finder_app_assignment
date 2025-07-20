@@ -58,9 +58,6 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<IsBookSavedUseCase>(
     () => IsBookSavedUseCase(getIt<SavedBooksRepository>()),
   );
-  getIt.registerLazySingleton<GetAllSavedBooksUseCase>(
-    () => GetAllSavedBooksUseCase(getIt<SavedBooksRepository>()),
-  );
 
   // BLoC
   getIt.registerFactory<BookSearchBloc>(
@@ -76,7 +73,6 @@ Future<void> configureDependencies() async {
       getIt<SaveBookUseCase>(),
       getIt<RemoveSavedBookUseCase>(),
       getIt<IsBookSavedUseCase>(),
-      getIt<GetAllSavedBooksUseCase>(),
     ),
   );
 }

@@ -34,14 +34,3 @@ class IsBookSavedUseCase {
     return await repository.isBookSaved(book);
   }
 }
-
-@injectable
-class GetAllSavedBooksUseCase {
-  final SavedBooksRepository repository;
-
-  GetAllSavedBooksUseCase(this.repository);
-
-  Future<(String?, List<BookEntity>?)> call() async {
-    return await repository.getAllSavedBooks();
-  }
-}

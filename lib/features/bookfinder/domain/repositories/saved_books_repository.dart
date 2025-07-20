@@ -5,5 +5,4 @@ abstract class SavedBooksRepository {
   Future<(String?, bool?)> saveBook(BookEntity book);
   Future<(String?, bool?)> removeSavedBook(BookEntity book);
   Future<(String?, bool?)> isBookSaved(BookEntity book);
-  Future<(String?, List<BookEntity>?)> getAllSavedBooks();
 }

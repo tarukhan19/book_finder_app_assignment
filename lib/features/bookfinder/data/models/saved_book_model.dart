@@ -66,20 +66,4 @@ class SavedBookModel extends HiveObject {
     final authorsHash = book.authorName.join(',').hashCode;
     return '${titleHash}_$authorsHash';
   }
-
-  // Override equality for proper comparison
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-          other is SavedBookModel &&
-              runtimeType == other.runtimeType &&
-              id == other.id;
-
-  @override
-  int get hashCode => id.hashCode;
-
-  @override
-  String toString() {
-    return 'SavedBookModel{id: $id, title: $title, savedAt: $savedAt}';
-  }
 }

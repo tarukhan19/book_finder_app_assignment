@@ -9,17 +9,14 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
   final SaveBookUseCase _saveBookUseCase;
   final RemoveSavedBookUseCase _removeSavedBookUseCase;
   final IsBookSavedUseCase _isBookSavedUseCase;
-  final GetAllSavedBooksUseCase _getAllSavedBooksUseCase;
 
   BookmarkBloc(
       this._saveBookUseCase,
       this._removeSavedBookUseCase,
       this._isBookSavedUseCase,
-      this._getAllSavedBooksUseCase,
       ) : super(const BookmarkInitial()) {
     on<CheckBookmarkStatusEvent>(_onCheckBookmarkStatus);
     on<ToggleBookmarkEvent>(_onToggleBookmark);
-    on<LoadAllSavedBooksEvent>(_onLoadAllSavedBooks);
   }
 
   Future<void> _onCheckBookmarkStatus(
@@ -79,22 +76,6 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
           message: 'Book saved to bookmarks',
         ));
       }
-    }
-  }
-
-  Future<void> _onLoadAllSavedBooks(
-      LoadAllSavedBooksEvent event,
-      Emitter<BookmarkState> emit,
-      ) async {
-    emit(const BookmarkLoading());
-
-    final result = await _getAllSavedBooksUseCase();
-    final (failure, savedBooks) = result;
-
-    if (failure != null) {
-      emit(BookmarkError(message: failure.toString()));
-    } else if (savedBooks != null) {
-      emit(SavedBooksLoaded(savedBooks: savedBooks));
     }
   }
 }
