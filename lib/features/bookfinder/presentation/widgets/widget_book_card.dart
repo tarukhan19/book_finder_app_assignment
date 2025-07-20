@@ -3,8 +3,6 @@ import 'package:book_finder_app_assignment/features/bookfinder/domain/entities/e
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../../../config/route/route.dart';
-import '../screens/book_detail_screen.dart';
-
 
 class BookCardWidget extends StatelessWidget {
   final BookEntity book;
@@ -16,10 +14,6 @@ class BookCardWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         AppRouter.pushBookDetail(context, book);
-
-        // Navigator.of(context).push(
-        //   MaterialPageRoute(builder: (context) => BookDetailScreen(book: book)),
-        // );
       },
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),

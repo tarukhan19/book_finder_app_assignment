@@ -1,112 +1,209 @@
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import '../../features/bookfinder/data/models/saved_book_model.dart';
 
-class DatabaseHelper {
-  static final DatabaseHelper _instance = DatabaseHelper._internal();
-  static Database? _database;
+class HiveService {
+  static const String _savedBooksBoxName = 'saved_books';
+  static HiveService? _instance;
+  Box<SavedBookModel>? _savedBooksBox;
 
-  DatabaseHelper._internal();
+  HiveService._internal();
 
-  factory DatabaseHelper() => _instance;
-
-  Future<Database> get database async {
-    _database ??= await _initDatabase();
-    return _database!;
+  static HiveService get instance {
+    _instance ??= HiveService._internal();
+    return _instance!;
   }
 
-  Future<Database> _initDatabase() async {
-    final databasesPath = await getDatabasesPath();
-    final path = join(databasesPath, 'books.db');
+  // Initialize Hive
+  static Future<void> init() async {
+    await Hive.initFlutter();
 
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _onCreate,
-    );
+    // Register adapters
+    if (!Hive.isAdapterRegistered(0)) {
+      Hive.registerAdapter(SavedBookModelAdapter());
+    }
   }
 
-  Future<void> _onCreate(Database db, int version) async {
-    await db.execute('''
-      CREATE TABLE saved_books(
-        id TEXT PRIMARY KEY,
-        title TEXT NOT NULL,
-        authorName TEXT,
-        authorKey TEXT,
-        coverId INTEGER,
-        firstPublishYear INTEGER,
-        savedAt INTEGER NOT NULL
-      )
-    ''');
+  // Open boxes
+  Future<void> openBoxes() async {
+    _savedBooksBox ??= await Hive.openBox<SavedBookModel>(_savedBooksBoxName);
+  }
+
+  // Get saved books box
+  Box<SavedBookModel> get savedBooksBox {
+    if (_savedBooksBox == null || !_savedBooksBox!.isOpen) {
+      throw Exception('Saved books box is not opened. Call openBoxes() first.');
+    }
+    return _savedBooksBox!;
   }
 
   // Save a book
   Future<void> saveBook(SavedBookModel book) async {
-    final db = await database;
-    await db.insert(
-      'saved_books',
-      book.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    try {
+      await savedBooksBox.put(book.id, book);
+    } catch (e) {
+      throw Exception('Failed to save book: $e');
+    }
   }
 
   // Remove a saved book
   Future<void> removeSavedBook(String bookId) async {
-    final db = await database;
-    await db.delete(
-      'saved_books',
-      where: 'id = ?',
-      whereArgs: [bookId],
-    );
+    try {
+      await savedBooksBox.delete(bookId);
+    } catch (e) {
+      throw Exception('Failed to remove book: $e');
+    }
   }
 
   // Check if book is saved
-  Future<bool> isBookSaved(String bookId) async {
-    final db = await database;
-    final result = await db.query(
-      'saved_books',
-      where: 'id = ?',
-      whereArgs: [bookId],
-      limit: 1,
-    );
-    return result.isNotEmpty;
+  bool isBookSaved(String bookId) {
+    try {
+      return savedBooksBox.containsKey(bookId);
+    } catch (e) {
+      return false;
+    }
   }
 
   // Get all saved books
-  Future<List<SavedBookModel>> getAllSavedBooks() async {
-    final db = await database;
-    final result = await db.query(
-      'saved_books',
-      orderBy: 'savedAt DESC',
-    );
-    return result.map((map) => SavedBookModel.fromMap(map)).toList();
+  List<SavedBookModel> getAllSavedBooks() {
+    try {
+      final books = savedBooksBox.values.toList();
+      // Sort by saved date (newest first)
+      books.sort((a, b) => b.savedAt.compareTo(a.savedAt));
+      return books;
+    } catch (e) {
+      return [];
+    }
   }
 
   // Get saved book by ID
-  Future<SavedBookModel?> getSavedBook(String bookId) async {
-    final db = await database;
-    final result = await db.query(
-      'saved_books',
-      where: 'id = ?',
-      whereArgs: [bookId],
-      limit: 1,
-    );
-
-    if (result.isNotEmpty) {
-      return SavedBookModel.fromMap(result.first);
+  SavedBookModel? getSavedBook(String bookId) {
+    try {
+      return savedBooksBox.get(bookId);
+    } catch (e) {
+      return null;
     }
-    return null;
   }
 
   // Clear all saved books
   Future<void> clearAllSavedBooks() async {
-    final db = await database;
-    await db.delete('saved_books');
+    try {
+      await savedBooksBox.clear();
+    } catch (e) {
+      throw Exception('Failed to clear saved books: $e');
+    }
   }
 
-  // Close database
+  // Get number of saved books
+  int getSavedBooksCount() {
+    try {
+      return savedBooksBox.length;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  // Get saved books stream for real-time updates
+  Stream<BoxEvent> get savedBooksStream {
+    return savedBooksBox.watch();
+  }
+
+  // Search saved books by title
+  List<SavedBookModel> searchSavedBooks(String query) {
+    try {
+      if (query.trim().isEmpty) {
+        return getAllSavedBooks();
+      }
+
+      final allBooks = getAllSavedBooks();
+      final queryLower = query.toLowerCase();
+
+      return allBooks.where((book) {
+        return book.title.toLowerCase().contains(queryLower) ||
+            book.authorName.any((author) =>
+                author.toLowerCase().contains(queryLower));
+      }).toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
+  // Get books saved in last N days
+  List<SavedBookModel> getRecentlySavedBooks({int days = 7}) {
+    try {
+      final cutoffDate = DateTime.now().subtract(Duration(days: days));
+      final allBooks = getAllSavedBooks();
+
+      return allBooks.where((book) =>
+          book.savedAt.isAfter(cutoffDate)
+      ).toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
+  // Backup saved books to JSON
+  List<Map<String, dynamic>> exportSavedBooks() {
+    try {
+      final books = getAllSavedBooks();
+      return books.map((book) => {
+        'id': book.id,
+        'title': book.title,
+        'authorName': book.authorName,
+        'authorKey': book.authorKey,
+        'coverId': book.coverId,
+        'firstPublishYear': book.firstPublishYear,
+        'savedAt': book.savedAt.toIso8601String(),
+      }).toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
+  // Import saved books from JSON
+  Future<int> importSavedBooks(List<Map<String, dynamic>> booksData) async {
+    try {
+      int importedCount = 0;
+
+      for (final bookData in booksData) {
+        final savedBook = SavedBookModel(
+          id: bookData['id'] ?? '',
+          title: bookData['title'] ?? '',
+          authorName: List<String>.from(bookData['authorName'] ?? []),
+          authorKey: List<String>.from(bookData['authorKey'] ?? []),
+          coverId: bookData['coverId'] as int?,
+          firstPublishYear: bookData['firstPublishYear'] as int?,
+          savedAt: DateTime.parse(bookData['savedAt'] ?? DateTime.now().toIso8601String()),
+        );
+
+        await saveBook(savedBook);
+        importedCount++;
+      }
+
+      print('Imported $importedCount books');
+      return importedCount;
+    } catch (e) {
+      print('Error importing saved books: $e');
+      throw Exception('Failed to import books: $e');
+    }
+  }
+
+  // Close all boxes
   Future<void> close() async {
-    final db = await database;
-    await db.close();
+    try {
+      if (_savedBooksBox?.isOpen == true) {
+        await _savedBooksBox!.close();
+      }
+    } catch (e) {
+      print('Error closing Hive boxes: $e');
+    }
+  }
+
+  // Compact database (optimize storage)
+  Future<void> compact() async {
+    try {
+      await savedBooksBox.compact();
+    } catch (e) {
+      print('Error compacting Hive database: $e');
+    }
   }
 }

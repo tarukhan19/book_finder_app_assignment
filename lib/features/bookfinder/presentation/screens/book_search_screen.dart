@@ -1,6 +1,8 @@
 import 'package:book_finder_app_assignment/features/bookfinder/presentation/widgets/widget_book_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../config/route/route.dart';
+import '../../../../config/theme/app_pallete.dart';
 import '../../../../core/di/injection.dart';
 import '../bloc/search/book_search_bloc.dart';
 import '../bloc/search/book_search_event.dart';
@@ -68,13 +70,16 @@ class _SearchPageViewState extends State<SearchPageView> {
       appBar: AppBar(
         title: const Text(
           'Book Finder',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
         ),
         backgroundColor: Colors.blue,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings, color: AppPallete.whiteColor),
+            onPressed: () => AppRouter.pushDashboard(context),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -118,14 +123,10 @@ class _InitialView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.search,
-            size: 80,
-            color: Colors.grey.shade400,
-          ),
+          Icon(Icons.menu_book, size: 80, color: Colors.grey.shade400),
           const SizedBox(height: 16),
           Text(
-            'Search for your favorite books!',
+            'Discover Amazing Books!',
             style: TextStyle(
               fontSize: 18,
               color: Colors.grey.shade600,
@@ -134,10 +135,16 @@ class _InitialView extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Enter a book title above to get started',
+            'Start typing to search for books...',
+            style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Results will appear as you type',
             style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade500,
+              fontSize: 12,
+              color: Colors.grey.shade400,
+              fontStyle: FontStyle.italic,
             ),
           ),
         ],
@@ -151,7 +158,40 @@ class _LoadingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ShimmerLoadingList(itemCount: 8);
+    return Column(
+      children: [
+        // Show a subtle loading indicator at the top
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          color: Colors.blue.withAlpha((0.5 * 255).round()),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.blue.shade600,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Searching...',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.blue.shade600,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+        // Show shimmer loading list
+        const Expanded(child: ShimmerLoadingList(itemCount: 8)),
+      ],
+    );
   }
 }
 
@@ -159,10 +199,7 @@ class _LoadedView extends StatelessWidget {
   final BookSearchLoaded state;
   final ScrollController scrollController;
 
-  const _LoadedView({
-    required this.state,
-    required this.scrollController,
-  });
+  const _LoadedView({required this.state, required this.scrollController});
 
   @override
   Widget build(BuildContext context) {
@@ -181,11 +218,7 @@ class _LoadedView extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.search_off,
-                    size: 80,
-                    color: Colors.grey.shade400,
-                  ),
+                  Icon(Icons.search_off, size: 80, color: Colors.grey.shade400),
                   const SizedBox(height: 16),
                   Text(
                     'No books found',
@@ -198,18 +231,12 @@ class _LoadedView extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     'Try searching with different keywords',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey.shade500,
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
                   ),
                   const SizedBox(height: 16),
                   Text(
                     'Pull down to refresh',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey.shade400,
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.grey.shade400),
                   ),
                 ],
               ),
@@ -247,10 +274,7 @@ class _LoadingMoreView extends StatelessWidget {
   final BookSearchLoadingMore state;
   final ScrollController scrollController;
 
-  const _LoadingMoreView({
-    required this.state,
-    required this.scrollController,
-  });
+  const _LoadingMoreView({required this.state, required this.scrollController});
 
   @override
   Widget build(BuildContext context) {
@@ -299,11 +323,7 @@ class _ErrorView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.error_outline,
-                  size: 80,
-                  color: Colors.red.shade300,
-                ),
+                Icon(Icons.error_outline, size: 80, color: Colors.red.shade300),
                 const SizedBox(height: 16),
                 Text(
                   'Oops! Something went wrong',
@@ -319,24 +339,20 @@ class _ErrorView extends StatelessWidget {
                   child: Text(
                     message,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey.shade500,
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
                   ),
                 ),
                 const SizedBox(height: 16),
                 Text(
                   'Pull down to refresh',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey.shade400,
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.grey.shade400),
                 ),
                 const SizedBox(height: 24),
                 ElevatedButton(
                   onPressed: () {
-                    context.read<BookSearchBloc>().add(const RefreshSearchEvent());
+                    context.read<BookSearchBloc>().add(
+                      const RefreshSearchEvent(),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,

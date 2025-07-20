@@ -10,10 +10,9 @@ BookSearchResponse _$BookSearchResponseFromJson(Map<String, dynamic> json) =>
     BookSearchResponse(
       numFound: (json['numFound'] as num).toInt(),
       start: (json['start'] as num).toInt(),
-      bookModel:
-          (json['docs'] as List<dynamic>)
-              .map((e) => BookModel.fromJson(e as Map<String, dynamic>))
-              .toList(),
+      bookModel: (json['docs'] as List<dynamic>)
+          .map((e) => BookModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
       numFoundExact: json['numFoundExact'] as bool,
     );
 

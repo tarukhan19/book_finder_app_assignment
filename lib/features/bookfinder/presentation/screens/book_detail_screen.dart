@@ -139,7 +139,7 @@ class BookDetailView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
+                            color: Colors.black.withAlpha((0.5 * 255).round()),
                             spreadRadius: 2,
                             blurRadius: 8,
                             offset: const Offset(0, 4),
@@ -205,7 +205,7 @@ class BookDetailView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: AppPallete.greyColor.withOpacity(0.1),
+                    color: Colors.grey.withAlpha((0.5 * 255).round()),
                     spreadRadius: 2,
                     blurRadius: 8,
                     offset: const Offset(0, 4),
@@ -309,7 +309,7 @@ class _DetailItem extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppPallete.blueColor.withOpacity(0.1),
+            color: AppPallete.blueColor.withAlpha((0.5 * 255).round()),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
