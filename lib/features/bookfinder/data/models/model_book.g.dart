@@ -12,7 +12,7 @@ BookModel _$BookModelFromJson(Map<String, dynamic> json) => BookModel(
       (json['author_name'] as List<dynamic>?)?.map((e) => e as String).toList(),
   authorKey:
       (json['author_key'] as List<dynamic>?)?.map((e) => e as String).toList(),
-  coverImage: json['cover_i'] as int?,
+  coverImage: (json['cover_i'] as num?)?.toInt(),
   firstPublishYear: (json['first_publish_year'] as num?)?.toInt(),
 );
 

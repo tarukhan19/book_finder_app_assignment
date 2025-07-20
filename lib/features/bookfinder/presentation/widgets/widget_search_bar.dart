@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../config/theme/app_pallete.dart';
-import '../bloc/book_search_bloc.dart';
-import '../bloc/book_search_event.dart';
+import '../bloc/search/book_search_bloc.dart';
+import '../bloc/search/book_search_event.dart';
 
 class SearchBarWidget extends StatefulWidget {
   const SearchBarWidget({super.key});

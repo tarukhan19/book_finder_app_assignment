@@ -50,7 +50,9 @@ dependencies:
   shimmer: ^3.0.0
   go_router: ^14.8.1
   json_annotation: ^4.9.0
-
+  # Already added to pubspec.yaml
+  sqflite: ^2.3.0  # SQLite database
+  path: ^1.8.3     # Path manipulation
 dev_dependencies:
   flutter_test:
     sdk: flutter

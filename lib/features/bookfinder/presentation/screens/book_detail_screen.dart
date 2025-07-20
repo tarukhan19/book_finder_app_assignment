@@ -1,13 +1,33 @@
 import 'package:book_finder_app_assignment/features/bookfinder/domain/entities/entity_book.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../config/theme/app_pallete.dart';
+import '../../../../core/di/injection.dart';
+import '../bloc/bookmark/Bookmark_bloc.dart';
+import '../bloc/bookmark/bookmark_event.dart';
+import '../bloc/bookmark/bookmark_state.dart';
 
 class BookDetailScreen extends StatelessWidget {
   final BookEntity book;
 
   const BookDetailScreen({super.key, required this.book});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => getIt<BookmarkBloc>()
+        ..add(CheckBookmarkStatusEvent(book: book)),
+      child: BookDetailView( book: book),
+    );
+  }
+}
+
+class BookDetailView extends StatelessWidget {
+  final BookEntity book;
+  const BookDetailView({super.key, required this.book});
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +47,67 @@ class BookDetailScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: AppPallete.whiteColor),
           onPressed: () => context.pop(),
         ),
+        actions: [
+          BlocConsumer<BookmarkBloc, BookmarkState>(
+            listener: (context, state) {
+              if (state is BookmarkToggled) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    duration: const Duration(seconds: 2),
+                    backgroundColor: state.isBookmarked ? Colors.green : Colors.orange,
+                  ),
+                );
+              } else if (state is BookmarkError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    duration: const Duration(seconds: 3),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+            builder: (context, state) {
+              bool isBookmarked = false;
+              bool isLoading = false;
+
+              if (state is BookmarkStatusLoaded) {
+                isBookmarked = state.isBookmarked;
+              } else if (state is BookmarkToggled) {
+                isBookmarked = state.isBookmarked;
+              } else if (state is BookmarkLoading) {
+                isLoading = true;
+              }
+
+              return IconButton(
+                onPressed: isLoading
+                    ? null
+                    : () {
+                  context.read<BookmarkBloc>().add(
+                    ToggleBookmarkEvent(book: book),
+                  );
+                },
+                icon: isLoading
+                    ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
+                    : Icon(
+                  isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                  color: Colors.white,
+                  size: 26,
+                ),
+              );
+            },
+          ),
+        ],
       ),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(

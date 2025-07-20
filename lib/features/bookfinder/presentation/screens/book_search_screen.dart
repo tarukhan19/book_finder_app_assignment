@@ -2,9 +2,9 @@ import 'package:book_finder_app_assignment/features/bookfinder/presentation/widg
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection.dart';
-import '../bloc/book_search_bloc.dart';
-import '../bloc/book_search_event.dart';
-import '../bloc/book_search_state.dart';
+import '../bloc/search/book_search_bloc.dart';
+import '../bloc/search/book_search_event.dart';
+import '../bloc/search/book_search_state.dart';
 import '../widgets/shimmer_book_item.dart';
 import '../widgets/shimmer_book_list.dart';
 import '../widgets/widget_search_bar.dart';
@@ -22,7 +22,7 @@ class BookSearchScreen extends StatelessWidget {
 }
 
 class SearchPageView extends StatefulWidget {
-  const SearchPageView({Key? key}) : super(key: key);
+  const SearchPageView({super.key});
 
   @override
   State<SearchPageView> createState() => _SearchPageViewState();
