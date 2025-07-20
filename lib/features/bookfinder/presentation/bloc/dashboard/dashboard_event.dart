@@ -11,10 +11,6 @@ class LoadDashboardDataEvent extends DashboardEvent {
   const LoadDashboardDataEvent();
 }
 
-class RefreshDashboardEvent extends DashboardEvent {
-  const RefreshDashboardEvent();
-}
-
 class ToggleFlashlightEvent extends DashboardEvent {
   const ToggleFlashlightEvent();
 }

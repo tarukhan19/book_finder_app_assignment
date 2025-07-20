@@ -1,7 +1,7 @@
 import 'package:book_finder_app_assignment/features/bookfinder/domain/entities/entity_book.dart';
 import 'package:injectable/injectable.dart';
-import '../../../../core/database/database_helper.dart';
 import '../../domain/repositories/saved_books_repository.dart';
+import '../data_source/database/database_helper.dart';
 import '../models/saved_book_model.dart';
 
 @LazySingleton(as: SavedBooksRepository)

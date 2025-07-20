@@ -11,8 +11,6 @@ class PlatformService {
 
   final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
   final Battery _battery = Battery();
-
-  // Track flashlight state manually since torch_light doesn't provide status check
   bool _isFlashlightOn = false;
 
   // Get device information
@@ -92,7 +90,7 @@ class PlatformService {
         );
       }
 
-      print('🔦 Current flashlight state: ${_isFlashlightOn ? "ON" : "OFF"}');
+      print('Current flashlight state: ${_isFlashlightOn ? "ON" : "OFF"}');
 
       if (_isFlashlightOn) {
         await TorchLight.disableTorch();

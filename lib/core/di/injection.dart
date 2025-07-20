@@ -6,11 +6,11 @@ import 'package:book_finder_app_assignment/features/bookfinder/presentation/bloc
 import 'package:book_finder_app_assignment/features/bookfinder/presentation/bloc/search/book_search_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import '../../features/bookfinder/data/data_source/database/database_helper.dart';
 import '../../features/bookfinder/domain/repositories/saved_books_repository.dart';
 import '../../features/bookfinder/domain/usecase/saved_books_use_cases.dart';
 import '../../features/bookfinder/domain/usecase/search_book_use_case.dart';
 import '../../features/bookfinder/presentation/bloc/dashboard/dashboard_bloc.dart';
-import '../database/database_helper.dart';
 import '../platform/service_platform.dart';
 
 final getIt = GetIt.instance;

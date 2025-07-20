@@ -1,5 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import '../../features/bookfinder/data/models/saved_book_model.dart';
+import '../../models/saved_book_model.dart';
 
 class HiveService {
   static const String _savedBooksBoxName = 'saved_books';
@@ -31,7 +31,7 @@ class HiveService {
   // Get saved books box
   Box<SavedBookModel> get savedBooksBox {
     if (_savedBooksBox == null || !_savedBooksBox!.isOpen) {
-      throw Exception('Saved books box is not opened. Call openBoxes() first.');
+      throw Exception('Saved books is not opened. Call openBoxes() first.');
     }
     return _savedBooksBox!;
   }
@@ -184,26 +184,6 @@ class HiveService {
     } catch (e) {
       print('Error importing saved books: $e');
       throw Exception('Failed to import books: $e');
-    }
-  }
-
-  // Close all boxes
-  Future<void> close() async {
-    try {
-      if (_savedBooksBox?.isOpen == true) {
-        await _savedBooksBox!.close();
-      }
-    } catch (e) {
-      print('Error closing Hive boxes: $e');
-    }
-  }
-
-  // Compact database (optimize storage)
-  Future<void> compact() async {
-    try {
-      await savedBooksBox.compact();
-    } catch (e) {
-      print('Error compacting Hive database: $e');
     }
   }
 }

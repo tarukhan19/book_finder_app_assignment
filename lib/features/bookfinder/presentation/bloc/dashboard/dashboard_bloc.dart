@@ -15,7 +15,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   DashboardBloc(this._platformService) : super(const DashboardInitial()) {
     on<LoadDashboardDataEvent>(_onLoadDashboardData);
-    on<RefreshDashboardEvent>(_onRefreshDashboard);
     on<ToggleFlashlightEvent>(_onToggleFlashlight);
     on<StartSensorMonitoringEvent>(_onStartSensorMonitoring);
     on<StopSensorMonitoringEvent>(_onStopSensorMonitoring);
@@ -50,13 +49,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     } catch (e) {
       emit(DashboardError(message: 'Failed to load dashboard: ${e.toString()}'));
     }
-  }
-
-  Future<void> _onRefreshDashboard(
-      RefreshDashboardEvent event,
-      Emitter<DashboardState> emit,
-      ) async {
-    add(const LoadDashboardDataEvent());
   }
 
   Future<void> _onToggleFlashlight(

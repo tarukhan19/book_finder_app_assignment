@@ -182,11 +182,6 @@ class _DashboardViewState extends State<DashboardView>
       opacity: _fadeAnimation,
       child: SlideTransition(
         position: _slideAnimation,
-        child: RefreshIndicator(
-          onRefresh: () async {
-            context.read<DashboardBloc>().add(const RefreshDashboardEvent());
-            await Future.delayed(const Duration(seconds: 1));
-          },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.all(16),
@@ -229,7 +224,6 @@ class _DashboardViewState extends State<DashboardView>
               ],
             ),
           ),
-        ),
       ),
     );
   }

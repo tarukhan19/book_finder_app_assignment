@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-
 import '../../../../core/platform/service_platform.dart';
 
 class SensorCard extends StatefulWidget {
