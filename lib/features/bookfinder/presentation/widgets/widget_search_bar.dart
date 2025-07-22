@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../config/theme/app_pallete.dart';
@@ -16,7 +14,6 @@ class SearchBarWidget extends StatefulWidget {
 
 class _SearchBarWidgetState extends State<SearchBarWidget> {
   late TextEditingController _controller;
- // Timer? _debounceTimer;
   late Debouncer _debouncer;
 
   @override
