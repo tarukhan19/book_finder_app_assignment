@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../config/theme/app_pallete.dart';
+import '../../../../core/utils/debouncer.dart';
 import '../bloc/search/book_search_bloc.dart';
 import '../bloc/search/book_search_event.dart';
 
@@ -15,38 +16,32 @@ class SearchBarWidget extends StatefulWidget {
 
 class _SearchBarWidgetState extends State<SearchBarWidget> {
   late TextEditingController _controller;
-  Timer? _debounceTimer;
-
-// Debounce duration - adjust as needed
-  static const Duration _debounceDuration = Duration(milliseconds: 500);
+ // Timer? _debounceTimer;
+  late Debouncer _debouncer;
 
   @override
   void initState() {
     super.initState();
+    _debouncer = Debouncer(delay: const Duration(milliseconds: 500));
     _controller = TextEditingController();
   }
 
   @override
   void dispose() {
     _controller.dispose();
-    _debounceTimer?.cancel();
+    _debouncer.dispose();
     super.dispose();
   }
 
   void _onSearchChanged(String query) {
-    // Cancel previous timer
-    _debounceTimer?.cancel();
-
-    // If query is empty, clear search
-    if (query.trim().isEmpty) {
-      context.read<BookSearchBloc>().add(const ClearSearchEvent());
-      return;
-    }
-
-    // Set new timer for debounced search
-    _debounceTimer = Timer(_debounceDuration, () {
-      if (query.trim().isNotEmpty) {
-        context.read<BookSearchBloc>().add(SearchBooksEvent(query: query.trim()));
+    final query = _controller.text.trim();
+    _debouncer(() {
+      if (query.isEmpty) {
+        // Clear search results
+        context.read<BookSearchBloc>().add(const ClearSearchEvent());
+      } else if (query.length >= 2) {
+        // Minimum 2 characters for search
+        context.read<BookSearchBloc>().add(SearchBooksEvent(query: query));
       }
     });
   }
