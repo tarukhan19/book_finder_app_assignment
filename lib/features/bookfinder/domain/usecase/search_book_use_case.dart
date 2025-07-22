@@ -2,7 +2,7 @@ import 'package:book_finder_app_assignment/features/bookfinder/domain/entities/s
 import 'package:book_finder_app_assignment/features/bookfinder/domain/repositories/book_repository.dart';
 import 'package:injectable/injectable.dart';
 
-@injectable
+@lazySingleton
 class SearchBooksUseCase {
   final BookRepository _bookRepository;
 

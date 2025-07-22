@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:battery_plus/battery_plus.dart';
+import 'package:injectable/injectable.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:torch_light/torch_light.dart';
 
+@lazySingleton
 class PlatformService {
   static const MethodChannel _channel = MethodChannel('com.bookfinder.device');
 
