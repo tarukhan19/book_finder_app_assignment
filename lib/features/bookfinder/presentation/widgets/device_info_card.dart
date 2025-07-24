@@ -134,7 +134,7 @@ class DeviceInfoCard extends StatelessWidget {
           ),
           const SizedBox(width: 6),
           Text(
-            '${batteryLevel}%',
+            '$batteryLevel%',
             style: TextStyle(
               color: batteryColor,
               fontWeight: FontWeight.bold,

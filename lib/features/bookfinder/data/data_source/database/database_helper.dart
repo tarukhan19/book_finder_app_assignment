@@ -2,7 +2,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../../models/saved_book_model.dart';
 
 class HiveService {
-  // Your existing code remains the same
   static HiveService? _instance;
   HiveService._internal();
   Box<SavedBookModel>? _savedBooksBox;

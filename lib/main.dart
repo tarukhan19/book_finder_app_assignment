@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'config/route/route.dart';
 import 'config/theme/theme.dart';
 import 'core/di/injection.dart';
@@ -7,8 +6,10 @@ import 'features/bookfinder/data/data_source/database/database_helper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await HiveService.init();
   await configureDependencies();
+
   runApp(const MyApp());
 }
 
