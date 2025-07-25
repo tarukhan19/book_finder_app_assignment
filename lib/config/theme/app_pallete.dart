@@ -6,5 +6,4 @@ class AppPallete {
   static const Color errorColor = Colors.redAccent;
   static const Color blackColor = Colors.black87;
   static const Color blueColor = Colors.blue;
-
 }

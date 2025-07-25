@@ -9,7 +9,6 @@ import 'package:torch_light/torch_light.dart';
 
 @lazySingleton
 class PlatformService {
-  static const MethodChannel _channel = MethodChannel('com.bookfinder.device');
 
   final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
   final Battery _battery = Battery();
@@ -81,7 +80,7 @@ class PlatformService {
 
   Future<void> toggleFlashlight() async {
     try {
-      print('🔦 Attempting to toggle flashlight...');
+      print('Attempting to toggle flashlight...');
 
       // Check availability first
       final isAvailable = await isFlashlightAvailable();
@@ -164,46 +163,6 @@ class PlatformService {
     return _isFlashlightOn;
   }
 
-  // Enhanced flashlight status with detailed info
-  Future<FlashlightStatus> getFlashlightStatus() async {
-    try {
-      final isAvailable = await isFlashlightAvailable();
-
-      String message = '';
-      if (!isAvailable) {
-        if (Platform.isAndroid) {
-          final androidInfo = await _deviceInfo.androidInfo;
-          if (androidInfo.isPhysicalDevice == false) {
-            message = 'Flashlight not available on emulator. Please test on a physical device.';
-          } else {
-            message = 'Flashlight not supported on this device.';
-          }
-        } else {
-          message = 'Flashlight not available. Please test on a physical device.';
-        }
-      } else {
-        message = _isFlashlightOn ? 'Flashlight is ON' : 'Flashlight is OFF';
-      }
-
-      return FlashlightStatus(
-        isAvailable: isAvailable,
-        isOn: _isFlashlightOn,
-        message: message,
-      );
-    } catch (e) {
-      return FlashlightStatus(
-        isAvailable: false,
-        isOn: false,
-        message: 'Error checking flashlight: $e',
-      );
-    }
-  }
-
-  // Reset flashlight state (useful for app lifecycle)
-  void resetFlashlightState() {
-    _isFlashlightOn = false;
-  }
-
   // Gyroscope data
   Stream<GyroscopeData> get gyroscopeStream {
     return gyroscopeEventStream().map((event) => GyroscopeData(
@@ -222,30 +181,6 @@ class PlatformService {
       z: event.z,
       timestamp: DateTime.now(),
     ));
-  }
-
-  // Custom platform channel methods
-  Future<String> getCustomDeviceInfo() async {
-    try {
-      final String result = await _channel.invokeMethod('getDeviceInfo');
-      return result;
-    } on PlatformException catch (e) {
-      throw PlatformException(
-        code: e.code,
-        message: 'Failed to get custom device info: ${e.message}',
-      );
-    }
-  }
-
-  Future<void> vibrate({int duration = 500}) async {
-    try {
-      await _channel.invokeMethod('vibrate', {'duration': duration});
-    } on PlatformException catch (e) {
-      throw PlatformException(
-        code: e.code,
-        message: 'Failed to vibrate: ${e.message}',
-      );
-    }
   }
 }
 
