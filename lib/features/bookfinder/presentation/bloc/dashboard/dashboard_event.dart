@@ -1,6 +1,6 @@
-import 'package:equatable/equatable.dart';
+import '../../../domain/entities/info_sensor.dart';
 
-abstract class DashboardEvent extends Equatable {
+abstract class DashboardEvent {
   const DashboardEvent();
 
   @override
@@ -23,13 +23,9 @@ class StopSensorMonitoringEvent extends DashboardEvent {
   const StopSensorMonitoringEvent();
 }
 
-class UpdateBatteryLevelEvent extends DashboardEvent {
-  final int batteryLevel;
-
-  const UpdateBatteryLevelEvent({required this.batteryLevel});
-
-  @override
-  List<Object> get props => [batteryLevel];
+class UpdateAccelerometerDataEvent extends DashboardEvent {
+  final SensorData data;
+  const UpdateAccelerometerDataEvent(this.data);
 }
 
 class UpdateGyroscopeDataEvent extends DashboardEvent {

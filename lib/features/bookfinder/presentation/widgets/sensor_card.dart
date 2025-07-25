@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import '../../../../core/platform/service_platform.dart';
+import '../bloc/dashboard/dashboard_state.dart';
 
 class SensorCard extends StatefulWidget {
   final bool isSensorMonitoring;
@@ -212,12 +212,10 @@ class _SensorCardState extends State<SensorCard>
       x = data.x;
       y = data.y;
       z = data.z;
-      magnitude = math.sqrt(data.magnitude);
     } else if (data is AccelerometerData) {
       x = data.x;
       y = data.y;
       z = data.z;
-      magnitude = math.sqrt(data.magnitude);
     } else {
       return const SizedBox.shrink();
     }
@@ -269,14 +267,6 @@ class _SensorCardState extends State<SensorCard>
             children: [
               Icon(Icons.trending_up, color: color, size: 16),
               const SizedBox(width: 4),
-              Text(
-                'Magnitude: ${magnitude.toStringAsFixed(2)}',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
             ],
           ),
         ],

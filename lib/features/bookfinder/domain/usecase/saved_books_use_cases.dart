@@ -13,7 +13,7 @@ class SaveBookUseCase {
   }
 }
 
-@injectable
+@lazySingleton
 class RemoveSavedBookUseCase {
   final SavedBooksRepository repository;
 
@@ -24,7 +24,7 @@ class RemoveSavedBookUseCase {
   }
 }
 
-@injectable
+@lazySingleton
 class IsBookSavedUseCase {
   final SavedBooksRepository repository;
 

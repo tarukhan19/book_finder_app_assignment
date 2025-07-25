@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/platform/service_platform.dart';
+import '../bloc/dashboard/dashboard_state.dart';
 
 class DeviceInfoCard extends StatelessWidget {
   final DeviceInfo deviceInfo;

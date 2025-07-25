@@ -1,24 +1,36 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import '../../../../../core/platform/service_platform.dart';
+import '../../../domain/entities/info_sensor.dart';
+import '../../../domain/usecase/get_battery_use_case.dart';
+import '../../../domain/usecase/get_info_use_case.dart';
+import '../../../domain/usecase/get_sensor_use_case.dart';
+import '../../../domain/usecase/get_torch_use_case.dart';
 import 'dashboard_event.dart';
 import 'dashboard_state.dart';
 
 @injectable
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
-  final PlatformService _platformService;
+  final GetSystemInfoUseCase getSystemInfoUseCase;
+  final GetBatteryInfoUseCase getBatteryInfoUseCase;
+  final ToggleTorchUseCase toggleTorchUseCase;
+  final GetTorchStateUseCase getTorchStateUseCase;
+  final GetSensorDataUseCase getSensorDataUseCase;
 
-  StreamSubscription? _batterySubscription;
-  StreamSubscription? _gyroscopeSubscription;
-  StreamSubscription? _accelerometerSubscription;
+  StreamSubscription<SensorData>? _accelerometerSubscription;
+  StreamSubscription<SensorData>? _gyroscopeSubscription;
 
-  DashboardBloc(this._platformService) : super(const DashboardInitial()) {
+  DashboardBloc({
+    required this.getSystemInfoUseCase,
+    required this.getBatteryInfoUseCase,
+    required this.toggleTorchUseCase,
+    required this.getTorchStateUseCase,
+    required this.getSensorDataUseCase,
+  })  : super(const DashboardInitial()) {
     on<LoadDashboardDataEvent>(_onLoadDashboardData);
     on<ToggleFlashlightEvent>(_onToggleFlashlight);
     on<StartSensorMonitoringEvent>(_onStartSensorMonitoring);
     on<StopSensorMonitoringEvent>(_onStopSensorMonitoring);
-    on<UpdateBatteryLevelEvent>(_onUpdateBatteryLevel);
     on<UpdateGyroscopeDataEvent>(_onUpdateGyroscopeData);
   }
 
@@ -26,25 +38,29 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       LoadDashboardDataEvent event,
       Emitter<DashboardState> emit,
       ) async {
-    emit(const DashboardLoading());
+    emit(const DashboardInitial());
 
     try {
-      // Get device information
-      final deviceInfo = await _platformService.getDeviceInfo();
 
-      // Check flashlight availability and status
-      final isFlashlightAvailable = await _platformService.isFlashlightAvailable();
-      final isFlashlightOn = await _platformService.isFlashlightOn();
+      final systemInfo = await getSystemInfoUseCase();
+      final batteryInfo = await getBatteryInfoUseCase();
+      final torchState = await getTorchStateUseCase();
+
+      final deviceInfo = DeviceInfo(
+        deviceName: systemInfo.deviceModel,
+        manufacturer: 'Unknown', // You may need to add this to your system info
+        brand: systemInfo.platform,
+        osVersion: systemInfo.osVersion,
+        platform: systemInfo.platform,
+        batteryLevel: batteryInfo.batteryLevel,
+      );
 
       emit(DashboardLoaded(
         deviceInfo: deviceInfo,
-        isFlashlightOn: isFlashlightOn,
-        isFlashlightAvailable: isFlashlightAvailable,
+        isFlashlightOn: torchState,
+        isFlashlightAvailable: true, // You may want to check availability
         isSensorMonitoring: false,
       ));
-
-      // Start battery monitoring
-      _startBatteryMonitoring();
 
     } catch (e) {
       emit(DashboardError(message: 'Failed to load dashboard: ${e.toString()}'));
@@ -59,16 +75,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     if (currentState is! DashboardLoaded) return;
 
     try {
-      await _platformService.toggleFlashlight();
-      final isFlashlightOn = await _platformService.isFlashlightOn();
-
-      emit(currentState.copyWith(isFlashlightOn: isFlashlightOn));
+      await toggleTorchUseCase(!currentState.isFlashlightOn);
+      emit(currentState.copyWith(isFlashlightOn: !currentState.isFlashlightOn));
     } catch (e) {
       emit(DashboardError(message: 'Failed to toggle flashlight: ${e.toString()}'));
-      // Restore previous state after error
-      Future.delayed(const Duration(seconds: 2), () {
-        if (!isClosed) emit(currentState);
-      });
     }
   }
 
@@ -98,25 +108,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     emit(currentState.copyWith(isSensorMonitoring: false));
   }
 
-  void _onUpdateBatteryLevel(
-      UpdateBatteryLevelEvent event,
-      Emitter<DashboardState> emit,
-      ) {
-    final currentState = state;
-    if (currentState is! DashboardLoaded) return;
-
-    final updatedDeviceInfo = DeviceInfo(
-      deviceName: currentState.deviceInfo.deviceName,
-      osVersion: currentState.deviceInfo.osVersion,
-      batteryLevel: event.batteryLevel,
-      platform: currentState.deviceInfo.platform,
-      manufacturer: currentState.deviceInfo.manufacturer,
-      brand: currentState.deviceInfo.brand,
-    );
-
-    emit(currentState.copyWith(deviceInfo: updatedDeviceInfo));
-  }
-
   void _onUpdateGyroscopeData(
       UpdateGyroscopeDataEvent event,
       Emitter<DashboardState> emit,
@@ -128,22 +119,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       x: event.x,
       y: event.y,
       z: event.z,
-      timestamp: DateTime.now(),
     );
 
     emit(currentState.copyWith(gyroscopeData: gyroscopeData));
-  }
-
-  void _startBatteryMonitoring() {
-    _batterySubscription?.cancel();
-    _batterySubscription = _platformService.batteryLevelStream.listen(
-          (batteryLevel) {
-        add(UpdateBatteryLevelEvent(batteryLevel: batteryLevel));
-      },
-      onError: (error) {
-        // Handle battery monitoring errors silently
-      },
-    );
   }
 
   void _startSensorMonitoring() {
@@ -151,7 +129,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     _accelerometerSubscription?.cancel();
 
     // Monitor gyroscope
-    _gyroscopeSubscription = _platformService.gyroscopeStream.listen(
+    _gyroscopeSubscription = getSensorDataUseCase.getGyroscopeData().listen(
           (gyroscopeData) {
         add(UpdateGyroscopeDataEvent(
           x: gyroscopeData.x,
@@ -165,11 +143,15 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     );
 
     // Monitor accelerometer
-    _accelerometerSubscription = _platformService.accelerometerStream.listen(
-          (accelerometerData) {
+    _accelerometerSubscription = getSensorDataUseCase.getAccelerometerData().listen(
+          (data) {
         final currentState = state;
         if (currentState is DashboardLoaded) {
-          emit(currentState.copyWith(accelerometerData: accelerometerData));
+          emit(currentState.copyWith(accelerometerData: AccelerometerData(
+            x: data.x,
+            y: data.y,
+            z: data.z,
+          ),));
         }
       },
       onError: (error) {
@@ -187,7 +169,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   @override
   Future<void> close() {
-    _batterySubscription?.cancel();
     _gyroscopeSubscription?.cancel();
     _accelerometerSubscription?.cancel();
     return super.close();

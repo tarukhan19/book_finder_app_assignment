@@ -53,10 +53,6 @@ dependencies:
 
   # Platform & Animation
   lottie: ^3.1.2
-  device_info_plus: ^10.1.0
-  battery_plus: ^6.0.1
-  sensors_plus: ^6.0.1
-  torch_light: ^1.0.0
 
   # Local Database - Using Hive instead of SQLite
   hive: ^2.2.3

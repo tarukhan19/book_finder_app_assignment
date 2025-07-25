@@ -1,19 +1,9 @@
-import 'package:equatable/equatable.dart';
-import '../../../../../core/platform/service_platform.dart';
-
-abstract class DashboardState extends Equatable {
+abstract class DashboardState {
   const DashboardState();
-
-  @override
-  List<Object?> get props => [];
 }
 
 class DashboardInitial extends DashboardState {
   const DashboardInitial();
-}
-
-class DashboardLoading extends DashboardState {
-  const DashboardLoading();
 }
 
 class DashboardLoaded extends DashboardState {
@@ -50,40 +40,50 @@ class DashboardLoaded extends DashboardState {
       accelerometerData: accelerometerData ?? this.accelerometerData,
     );
   }
-
-  @override
-  List<Object?> get props => [
-    deviceInfo,
-    isFlashlightOn,
-    isFlashlightAvailable,
-    isSensorMonitoring,
-    gyroscopeData,
-    accelerometerData,
-  ];
 }
 
 class DashboardError extends DashboardState {
-  final String message;
-
-  const DashboardError({required this.message});
-
-  @override
-  List<Object> get props => [message];
+  const DashboardError({required String message});
 }
 
-class FlashlightToggling extends DashboardState {
-  const FlashlightToggling();
-}
+class DeviceInfo {
+  final String deviceName;
+  final String manufacturer;
+  final String brand;
+  final String osVersion;
+  final String platform;
+  final int batteryLevel;
 
-class SensorDataUpdated extends DashboardState {
-  final GyroscopeData gyroscopeData;
-  final AccelerometerData? accelerometerData;
-
-  const SensorDataUpdated({
-    required this.gyroscopeData,
-    this.accelerometerData,
+  DeviceInfo({
+    required this.deviceName,
+    required this.manufacturer,
+    required this.brand,
+    required this.osVersion,
+    required this.platform,
+    required this.batteryLevel,
   });
+}
 
-  @override
-  List<Object?> get props => [gyroscopeData, accelerometerData];
+class GyroscopeData {
+  final double x;
+  final double y;
+  final double z;
+
+  GyroscopeData({
+    required this.x,
+    required this.y,
+    required this.z,
+  });
+}
+
+class AccelerometerData {
+  final double x;
+  final double y;
+  final double z;
+
+  AccelerometerData({
+    required this.x,
+    required this.y,
+    required this.z,
+  });
 }

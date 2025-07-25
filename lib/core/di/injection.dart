@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import '../../features/bookfinder/data/data_source/database/database_helper.dart';
-
 import 'injection.config.dart'; // This will be generated
 
 final getIt = GetIt.instance;
