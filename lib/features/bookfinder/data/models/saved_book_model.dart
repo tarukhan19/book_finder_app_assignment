@@ -49,17 +49,6 @@ class SavedBookModel extends HiveObject {
     );
   }
 
-  // Convert to Book entity
-  BookEntity toEntity() {
-    return BookEntity(
-      title: title,
-      authorName: authorName,
-      authorKey: authorKey,
-      coverImage: coverId,
-      firstPublishYear: firstPublishYear,
-    );
-  }
-
   // Generate unique ID based on book properties
   static String _generateId(BookEntity book) {
     final titleHash = book.title.hashCode;

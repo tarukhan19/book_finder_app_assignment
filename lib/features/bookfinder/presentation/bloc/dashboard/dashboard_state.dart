@@ -48,7 +48,6 @@ class DashboardError extends DashboardState {
 
 class DeviceInfo {
   final String deviceName;
-  final String manufacturer;
   final String brand;
   final String osVersion;
   final String platform;
@@ -56,7 +55,6 @@ class DeviceInfo {
 
   DeviceInfo({
     required this.deviceName,
-    required this.manufacturer,
     required this.brand,
     required this.osVersion,
     required this.platform,

@@ -69,22 +69,4 @@ class DeviceDataSourceImpl implements DeviceRepository {
       return SensorDataModel.fromMap(Map<String, dynamic>.from(data));
     });
   }
-
-  // @override
-  // Future<void> startSensorListening() async {
-  //   // try {
-  //   //   await _channel.invokeMethod('startSensorListening');
-  //   // } catch (e) {
-  //   //   throw Exception('Failed to start sensor listening: $e');
-  //   // }
-  // }
-  //
-  // @override
-  // Future<void> stopSensorListening() async {
-  //   // try {
-  //   //   await _channel.invokeMethod('stopSensorListening');
-  //   // } catch (e) {
-  //   //   throw Exception('Failed to stop sensor listening: $e');
-  //   // }
-  // }
 }

@@ -65,14 +65,6 @@ class DeviceInfoCard extends StatelessWidget {
               value: deviceInfo.deviceName,
             ),
             const SizedBox(height: 12),
-
-            _buildInfoRow(
-              icon: Icons.business,
-              label: 'Manufacturer',
-              value: deviceInfo.manufacturer,
-            ),
-            const SizedBox(height: 12),
-
             _buildInfoRow(
               icon: Icons.memory,
               label: 'Model',

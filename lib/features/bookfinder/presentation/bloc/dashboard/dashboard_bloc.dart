@@ -48,7 +48,6 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
       final deviceInfo = DeviceInfo(
         deviceName: systemInfo.deviceModel,
-        manufacturer: 'Unknown', // You may need to add this to your system info
         brand: systemInfo.platform,
         osVersion: systemInfo.osVersion,
         platform: systemInfo.platform,
