@@ -1,89 +1,47 @@
-import 'package:equatable/equatable.dart';
-import '../../../../../core/platform/service_platform.dart';
+import 'package:book_finder_app_assignment/features/bookfinder/domain/entities/info_sensor.dart';
 
-abstract class DashboardState extends Equatable {
+import '../../../domain/entities/info_system.dart';
+
+abstract class DashboardState {
   const DashboardState();
-
-  @override
-  List<Object?> get props => [];
 }
 
 class DashboardInitial extends DashboardState {
   const DashboardInitial();
 }
 
-class DashboardLoading extends DashboardState {
-  const DashboardLoading();
-}
-
 class DashboardLoaded extends DashboardState {
-  final DeviceInfo deviceInfo;
+  final SystemInfo systemInfo;
   final bool isFlashlightOn;
   final bool isFlashlightAvailable;
   final bool isSensorMonitoring;
-  final GyroscopeData? gyroscopeData;
-  final AccelerometerData? accelerometerData;
+  final SensorData? sensorData;
 
   const DashboardLoaded({
-    required this.deviceInfo,
+    required this.systemInfo,
     required this.isFlashlightOn,
     required this.isFlashlightAvailable,
     required this.isSensorMonitoring,
-    this.gyroscopeData,
-    this.accelerometerData,
+    this.sensorData,
   });
 
   DashboardLoaded copyWith({
-    DeviceInfo? deviceInfo,
+    SystemInfo? systemInfo,
     bool? isFlashlightOn,
     bool? isFlashlightAvailable,
     bool? isSensorMonitoring,
-    GyroscopeData? gyroscopeData,
-    AccelerometerData? accelerometerData,
+    SensorData? sensorData,
   }) {
     return DashboardLoaded(
-      deviceInfo: deviceInfo ?? this.deviceInfo,
+      systemInfo: systemInfo ?? this.systemInfo,
       isFlashlightOn: isFlashlightOn ?? this.isFlashlightOn,
       isFlashlightAvailable: isFlashlightAvailable ?? this.isFlashlightAvailable,
       isSensorMonitoring: isSensorMonitoring ?? this.isSensorMonitoring,
-      gyroscopeData: gyroscopeData ?? this.gyroscopeData,
-      accelerometerData: accelerometerData ?? this.accelerometerData,
+      sensorData: sensorData ?? this.sensorData,
     );
   }
-
-  @override
-  List<Object?> get props => [
-    deviceInfo,
-    isFlashlightOn,
-    isFlashlightAvailable,
-    isSensorMonitoring,
-    gyroscopeData,
-    accelerometerData,
-  ];
 }
 
 class DashboardError extends DashboardState {
-  final String message;
-
-  const DashboardError({required this.message});
-
-  @override
-  List<Object> get props => [message];
-}
-
-class FlashlightToggling extends DashboardState {
-  const FlashlightToggling();
-}
-
-class SensorDataUpdated extends DashboardState {
-  final GyroscopeData gyroscopeData;
-  final AccelerometerData? accelerometerData;
-
-  const SensorDataUpdated({
-    required this.gyroscopeData,
-    this.accelerometerData,
-  });
-
-  @override
-  List<Object?> get props => [gyroscopeData, accelerometerData];
+  const DashboardError({required String message});
 }

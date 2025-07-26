@@ -31,8 +31,6 @@ class BookModel extends Equatable {
   factory BookModel.fromJson(Map<String, dynamic> json) =>
       _$BookModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$BookModelToJson(this);
-
   @override
   List<Object?> get props => [
     title,

@@ -28,8 +28,6 @@ class BookSearchResponse extends Equatable {
   factory BookSearchResponse.fromJson(Map<String, dynamic> json) =>
       _$BookSearchResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$BookSearchResponseToJson(this);
-
   @override
   List<Object?> get props => [numFound, start, bookModel,numFoundExact];
 }

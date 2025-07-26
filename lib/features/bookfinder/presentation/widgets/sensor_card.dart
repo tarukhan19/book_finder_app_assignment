@@ -1,19 +1,17 @@
+import 'package:book_finder_app_assignment/features/bookfinder/domain/entities/info_sensor.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import '../../../../core/platform/service_platform.dart';
 
 class SensorCard extends StatefulWidget {
   final bool isSensorMonitoring;
-  final GyroscopeData? gyroscopeData;
-  final AccelerometerData? accelerometerData;
+  final SensorData? sensorData;
   final VoidCallback onStartMonitoring;
   final VoidCallback onStopMonitoring;
 
   const SensorCard({
     super.key,
     required this.isSensorMonitoring,
-    this.gyroscopeData,
-    this.accelerometerData,
+    this.sensorData,
     required this.onStartMonitoring,
     required this.onStopMonitoring,
   });
@@ -153,25 +151,16 @@ class _SensorCardState extends State<SensorCard>
               const SizedBox(height: 20),
 
               // Gyroscope Data
-              if (widget.gyroscopeData != null) ...[
+              if (widget.sensorData != null) ...[
                 _buildSensorSection(
                   title: 'Gyroscope',
                   icon: Icons.rotate_right,
-                  data: widget.gyroscopeData!,
+                  data: widget.sensorData!,
                   color: Colors.blue,
                 ),
                 const SizedBox(height: 16),
               ],
 
-              // Accelerometer Data
-              if (widget.accelerometerData != null) ...[
-                _buildSensorSection(
-                  title: 'Accelerometer',
-                  icon: Icons.speed,
-                  data: widget.accelerometerData!,
-                  color: Colors.purple,
-                ),
-              ],
             ] else ...[
               const SizedBox(height: 20),
               Center(
@@ -206,18 +195,12 @@ class _SensorCardState extends State<SensorCard>
     required dynamic data,
     required Color color,
   }) {
-    double x, y, z, magnitude;
+    double x, y, z;
 
-    if (data is GyroscopeData) {
+    if (data is SensorData) {
       x = data.x;
       y = data.y;
       z = data.z;
-      magnitude = math.sqrt(data.magnitude);
-    } else if (data is AccelerometerData) {
-      x = data.x;
-      y = data.y;
-      z = data.z;
-      magnitude = math.sqrt(data.magnitude);
     } else {
       return const SizedBox.shrink();
     }
@@ -269,14 +252,6 @@ class _SensorCardState extends State<SensorCard>
             children: [
               Icon(Icons.trending_up, color: color, size: 16),
               const SizedBox(width: 4),
-              Text(
-                'Magnitude: ${magnitude.toStringAsFixed(2)}',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
             ],
           ),
         ],

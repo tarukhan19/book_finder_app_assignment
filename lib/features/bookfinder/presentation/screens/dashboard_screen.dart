@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lottie/lottie.dart';
 import '../../../../config/theme/app_pallete.dart';
 import '../../../../core/di/injection.dart';
 import '../bloc/dashboard/dashboard_bloc.dart';
@@ -102,77 +101,16 @@ class _DashboardViewState extends State<DashboardView>
           if (state is DashboardLoaded) {
             _fadeController.forward();
             _slideController.forward();
-          } else if (state is DashboardError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red,
-                action: SnackBarAction(
-                  label: 'Retry',
-                  textColor: Colors.white,
-                  onPressed: () {
-                    context.read<DashboardBloc>().add(const LoadDashboardDataEvent());
-                  },
-                ),
-              ),
-            );
           }
         },
         builder: (context, state) {
-          if (state is DashboardLoading) {
-            return _buildLoadingView();
-          } else if (state is DashboardLoaded) {
+           if (state is DashboardLoaded) {
             return _buildLoadedView(state);
           } else if (state is DashboardError) {
             return _buildErrorView(state);
           }
           return _buildInitialView();
         },
-      ),
-    );
-  }
-
-  Widget _buildLoadingView() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Lottie loading animation
-          SizedBox(
-            width: 200,
-            height: 200,
-            child: Lottie.asset(
-              'assets/animations/loading.json',
-              repeat: true,
-              reverse: false,
-              animate: true,
-              errorBuilder: (context, error, stackTrace) {
-                // Fallback to built-in animation if Lottie file not found
-                return const CircularProgressIndicator(
-                  strokeWidth: 4,
-                  color: Colors.blue,
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            'Loading Device Information...',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey.shade600,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Please wait while we gather your device data',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade500,
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -193,7 +131,7 @@ class _DashboardViewState extends State<DashboardView>
                 const SizedBox(height: 24),
 
                 // Device Information Card
-                DeviceInfoCard(deviceInfo: state.deviceInfo),
+                DeviceInfoCard(systemInfo: state.systemInfo),
                 const SizedBox(height: 16),
 
                 // Flashlight Control Card
@@ -209,8 +147,7 @@ class _DashboardViewState extends State<DashboardView>
                 // Sensor Data Card
                 SensorCard(
                   isSensorMonitoring: state.isSensorMonitoring,
-                  gyroscopeData: state.gyroscopeData,
-                  accelerometerData: state.accelerometerData,
+                  sensorData: state.sensorData,
                   onStartMonitoring: () {
                     context.read<DashboardBloc>().add(const StartSensorMonitoringEvent());
                   },
@@ -253,7 +190,7 @@ class _DashboardViewState extends State<DashboardView>
           Row(
             children: [
               Icon(
-                _getPlatformIcon(state.deviceInfo.platform),
+                _getPlatformIcon(state.systemInfo.platform),
                 color: Colors.white,
                 size: 32,
               ),
@@ -271,27 +208,13 @@ class _DashboardViewState extends State<DashboardView>
                       ),
                     ),
                     Text(
-                      'Monitoring ${state.deviceInfo.deviceName}',
+                      'Monitoring ${state.systemInfo.deviceModel}',
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.9),
                         fontSize: 14,
                       ),
                     ),
                   ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  '${state.deviceInfo.batteryLevel}%',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
                 ),
               ),
             ],
@@ -333,31 +256,7 @@ class _DashboardViewState extends State<DashboardView>
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              state.message,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade500,
-              ),
-            ),
             const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () {
-                context.read<DashboardBloc>().add(const LoadDashboardDataEvent());
-              },
-              icon: const Icon(Icons.refresh),
-              label: const Text('Try Again'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-              ),
-            ),
           ],
         ),
       ),
