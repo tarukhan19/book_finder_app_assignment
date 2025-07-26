@@ -14,13 +14,10 @@ Future<void> configureDependencies() async {
 }
 
 @module
-abstract class DioProvider {
+abstract class CoreModule {
   @lazySingleton
   Dio get dio => Dio();
-}
 
-@module
-abstract class CoreModule {
   @lazySingleton
   HiveService get hiveService => HiveService.instance;
 }

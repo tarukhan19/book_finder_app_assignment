@@ -56,9 +56,8 @@ extension GetItInjectableX on _i174.GetIt {
       environment,
       environmentFilter,
     );
-    final dioProvider = _$DioProvider();
     final coreModule = _$CoreModule();
-    gh.lazySingleton<_i361.Dio>(() => dioProvider.dio);
+    gh.lazySingleton<_i361.Dio>(() => coreModule.dio);
     gh.lazySingleton<_i398.HiveService>(() => coreModule.hiveService);
     gh.lazySingleton<_i1029.BookApiService>(
         () => _i1029.BookApiService(gh<_i361.Dio>()));
@@ -100,7 +99,5 @@ extension GetItInjectableX on _i174.GetIt {
     return this;
   }
 }
-
-class _$DioProvider extends _i5.DioProvider {}
 
 class _$CoreModule extends _i5.CoreModule {}
