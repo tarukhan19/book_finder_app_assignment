@@ -2,15 +2,19 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../../models/saved_book_model.dart';
 
 class HiveService {
-  static HiveService? _instance;
+
+  // Step 1: Private constructor
   HiveService._internal();
+
+  // Step 2: Static instance (created only once)
+  static final HiveService _instance = HiveService._internal();
+
+  // Step 3: Public getter to access the instance
+  static HiveService get instance => _instance;
+
   Box<SavedBookModel>? _savedBooksBox;
   static const String _savedBooksBoxName = 'saved_books';
 
-  static HiveService get instance {
-    _instance ??= HiveService._internal();
-    return _instance!;
-  }
   // Initialize Hive
   static Future<void> init() async {
     await Hive.initFlutter();
