@@ -1,10 +1,10 @@
-import 'package:book_finder_app_assignment/features/bookfinder/domain/entities/info_sensor.dart';
+import 'package:book_finder_app_assignment/features/bookfinder/domain/entities/entity_info_sensor.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class SensorCard extends StatefulWidget {
   final bool isSensorMonitoring;
-  final SensorData? sensorData;
+  final SensorDataEntity? sensorData;
   final VoidCallback onStartMonitoring;
   final VoidCallback onStopMonitoring;
 
@@ -197,7 +197,7 @@ class _SensorCardState extends State<SensorCard>
   }) {
     double x, y, z;
 
-    if (data is SensorData) {
+    if (data is SensorDataEntity) {
       x = data.x;
       y = data.y;
       z = data.z;

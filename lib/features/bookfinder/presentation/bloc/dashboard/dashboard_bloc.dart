@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import '../../../domain/entities/info_sensor.dart';
-import '../../../domain/entities/info_system.dart';
+import '../../../domain/entities/entity_info_sensor.dart';
+import '../../../domain/entities/entity_info_system.dart';
 import '../../../domain/usecase/get_info_use_case.dart';
 import '../../../domain/usecase/get_sensor_use_case.dart';
 import '../../../domain/usecase/get_torch_use_case.dart';
@@ -16,7 +16,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final GetTorchStateUseCase getTorchStateUseCase;
   final GetSensorDataUseCase getSensorDataUseCase;
 
-  StreamSubscription<SensorData>? _gyroscopeSubscription;
+  StreamSubscription<SensorDataEntity>? _gyroscopeSubscription;
 
   DashboardBloc({
     required this.getSystemInfoUseCase,
@@ -42,7 +42,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       final systemInfo = await getSystemInfoUseCase();
       final torchState = await getTorchStateUseCase();
 
-      final deviceInfo = SystemInfo(
+      final deviceInfo = SystemInfoEntity(
         osVersion: systemInfo.osVersion,
         platform: systemInfo.platform,
         batteryLevel: systemInfo.batteryLevel,
@@ -109,7 +109,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     final currentState = state;
     if (currentState is! DashboardLoaded) return;
 
-    final sensorData = SensorData(
+    final sensorData = SensorDataEntity(
       x: event.x,
       y: event.y,
       z: event.z,

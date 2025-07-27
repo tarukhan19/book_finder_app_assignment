@@ -10,13 +10,4 @@ class SystemInfoModel {
     required this.platform,
     required this.batteryLevel
   });
-
-  factory SystemInfoModel.fromMap(Map<String, dynamic> map) {
-    return SystemInfoModel(
-      deviceModel: map['deviceModel'] ?? '',
-      osVersion: map['osVersion'] ?? '',
-      platform: map['platform'] ?? '',
-      batteryLevel: map['batteryLevel'] ?? 0,
-    );
-  }
 }

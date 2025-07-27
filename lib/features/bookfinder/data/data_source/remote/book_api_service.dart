@@ -13,7 +13,7 @@ abstract class BookApiService {
   factory BookApiService(Dio dio) = _BookApiService;
 
   @GET(searchBook)
-  Future<BookSearchResponse> searchBooks(
+  Future<BookSearchResponseModel> searchBooks(
     @Query('q') String? bookName,
     @Query('page') int page,
     @Query('limit') int limit,

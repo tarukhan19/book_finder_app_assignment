@@ -1,8 +1,8 @@
-import 'package:book_finder_app_assignment/features/bookfinder/domain/entities/info_system.dart';
+import 'package:book_finder_app_assignment/features/bookfinder/domain/entities/entity_info_system.dart';
 import 'package:flutter/material.dart';
 
 class DeviceInfoCard extends StatelessWidget {
-  final SystemInfo systemInfo;
+  final SystemInfoEntity systemInfo;
 
   const DeviceInfoCard({super.key, required this.systemInfo});
 

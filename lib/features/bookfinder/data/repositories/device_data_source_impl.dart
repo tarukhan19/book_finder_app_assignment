@@ -16,11 +16,6 @@ class DeviceDataSourceImpl implements DeviceRepository {
   bool _isFlashlightOn = false;
 
   @override
-  Stream<SensorDataModel> getAccelerometerStream() {
-    throw UnimplementedError();
-  }
-
-  @override
   Future<SystemInfoModel> getSystemInfo() async {
     try {
       if (Platform.isAndroid) {

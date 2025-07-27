@@ -1,6 +1,5 @@
-import 'package:book_finder_app_assignment/features/bookfinder/domain/entities/info_sensor.dart';
-
-import '../../../domain/entities/info_system.dart';
+import 'package:book_finder_app_assignment/features/bookfinder/domain/entities/entity_info_sensor.dart';
+import '../../../domain/entities/entity_info_system.dart';
 
 abstract class DashboardState {
   const DashboardState();
@@ -11,11 +10,11 @@ class DashboardInitial extends DashboardState {
 }
 
 class DashboardLoaded extends DashboardState {
-  final SystemInfo systemInfo;
+  final SystemInfoEntity systemInfo;
   final bool isFlashlightOn;
   final bool isFlashlightAvailable;
   final bool isSensorMonitoring;
-  final SensorData? sensorData;
+  final SensorDataEntity? sensorData;
 
   const DashboardLoaded({
     required this.systemInfo,
@@ -26,11 +25,11 @@ class DashboardLoaded extends DashboardState {
   });
 
   DashboardLoaded copyWith({
-    SystemInfo? systemInfo,
+    SystemInfoEntity? systemInfo,
     bool? isFlashlightOn,
     bool? isFlashlightAvailable,
     bool? isSensorMonitoring,
-    SensorData? sensorData,
+    SensorDataEntity? sensorData,
   }) {
     return DashboardLoaded(
       systemInfo: systemInfo ?? this.systemInfo,

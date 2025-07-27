@@ -24,7 +24,7 @@ class _BookApiService implements BookApiService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<BookSearchResponse> searchBooks(
+  Future<BookSearchResponseModel> searchBooks(
     String? bookName,
     int page,
     int limit,
@@ -38,7 +38,7 @@ class _BookApiService implements BookApiService {
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<BookSearchResponse>(Options(
+    final _options = _setStreamType<BookSearchResponseModel>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -55,9 +55,9 @@ class _BookApiService implements BookApiService {
           baseUrl,
         )));
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late BookSearchResponse _value;
+    late BookSearchResponseModel _value;
     try {
-      _value = BookSearchResponse.fromJson(_result.data!);
+      _value = BookSearchResponseModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

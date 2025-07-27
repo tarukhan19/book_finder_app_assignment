@@ -5,7 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'response_book.g.dart';
 
 @JsonSerializable()
-class BookSearchResponse extends Equatable {
+class BookSearchResponseModel extends Equatable {
   @JsonKey(name: 'numFound')
   final int numFound;
 
@@ -18,15 +18,15 @@ class BookSearchResponse extends Equatable {
   @JsonKey(name: 'docs')
   final List<BookModel> bookModel;
 
-  const BookSearchResponse({
+  const BookSearchResponseModel({
     required this.numFound,
     required this.start,
     required this.bookModel,
     required this.numFoundExact
   });
 
-  factory BookSearchResponse.fromJson(Map<String, dynamic> json) =>
-      _$BookSearchResponseFromJson(json);
+  factory BookSearchResponseModel.fromJson(Map<String, dynamic> json) =>
+      _$BookSearchResponseModelFromJson(json);
 
   @override
   List<Object?> get props => [numFound, start, bookModel,numFoundExact];

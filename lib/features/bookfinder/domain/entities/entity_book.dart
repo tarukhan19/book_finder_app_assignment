@@ -7,12 +7,12 @@ class BookEntity extends Equatable {
   final int? firstPublishYear;
   final int? coverImage;
 
-  const BookEntity({
+   const BookEntity({
     required this.authorKey,
     required this.title,
     required this.authorName,
-    required this.firstPublishYear,
-    required this.coverImage,
+     this.firstPublishYear,
+     this.coverImage,
   });
 
   String get coverUrl {

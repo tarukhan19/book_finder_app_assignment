@@ -1,4 +1,4 @@
-import '../../../domain/entities/info_sensor.dart';
+import '../../../domain/entities/entity_info_sensor.dart';
 
 abstract class DashboardEvent {
   const DashboardEvent();
@@ -24,7 +24,7 @@ class StopSensorMonitoringEvent extends DashboardEvent {
 }
 
 class UpdateAccelerometerDataEvent extends DashboardEvent {
-  final SensorData data;
+  final SensorDataEntity data;
   const UpdateAccelerometerDataEvent(this.data);
 }
 

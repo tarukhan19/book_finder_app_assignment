@@ -6,8 +6,9 @@ part of 'response_book.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-BookSearchResponse _$BookSearchResponseFromJson(Map<String, dynamic> json) =>
-    BookSearchResponse(
+BookSearchResponseModel _$BookSearchResponseModelFromJson(
+        Map<String, dynamic> json) =>
+    BookSearchResponseModel(
       numFound: (json['numFound'] as num).toInt(),
       start: (json['start'] as num).toInt(),
       bookModel: (json['docs'] as List<dynamic>)
@@ -16,7 +17,8 @@ BookSearchResponse _$BookSearchResponseFromJson(Map<String, dynamic> json) =>
       numFoundExact: json['numFoundExact'] as bool,
     );
 
-Map<String, dynamic> _$BookSearchResponseToJson(BookSearchResponse instance) =>
+Map<String, dynamic> _$BookSearchResponseModelToJson(
+        BookSearchResponseModel instance) =>
     <String, dynamic>{
       'numFound': instance.numFound,
       'start': instance.start,
