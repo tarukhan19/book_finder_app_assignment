@@ -38,15 +38,6 @@ class BookmarkToggled extends BookmarkState {
   List<Object> get props => [isBookmarked, message];
 }
 
-class SavedBooksLoaded extends BookmarkState {
-  final List<BookEntity> savedBooks;
-
-  const SavedBooksLoaded({required this.savedBooks});
-
-  @override
-  List<Object> get props => [savedBooks];
-}
-
 class BookmarkError extends BookmarkState {
   final String message;
 

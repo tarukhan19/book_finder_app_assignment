@@ -9,6 +9,13 @@ import '../../../domain/usecase/get_torch_use_case.dart';
 import 'dashboard_event.dart';
 import 'dashboard_state.dart';
 
+/*
+-- On app launch, it loads OS version, battery level, and device model via GetSystemInfoUseCase,
+and checks the torch state.
+-- Users can toggle the flashlight, which updates the UI state accordingly.
+-- For sensor monitoring, I listen to a gyroscope data stream using GetSensorDataUseCase,
+and update the state with real-time x, y, and z values.
+ */
 @injectable
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final GetSystemInfoUseCase getSystemInfoUseCase;

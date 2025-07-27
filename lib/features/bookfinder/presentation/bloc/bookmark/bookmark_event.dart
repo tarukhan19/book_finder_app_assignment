@@ -25,7 +25,3 @@ class ToggleBookmarkEvent extends BookmarkEvent {
   @override
   List<Object> get props => [book];
 }
-
-class LoadAllSavedBooksEvent extends BookmarkEvent {
-  const LoadAllSavedBooksEvent();
-}

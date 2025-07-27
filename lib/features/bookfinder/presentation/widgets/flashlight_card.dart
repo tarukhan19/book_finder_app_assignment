@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+/*
+I used an AnimationController with a Tween and CurvedAnimation to create a
+smooth pulsing effect on the button when the flashlight is ON. The scale transitions between
+0.8 and 1.2 using Transform.scale inside an AnimatedBuilder.
+ */
 class FlashlightCard extends StatefulWidget {
   final bool isFlashlightOn;
   final bool isFlashlightAvailable;
@@ -16,6 +21,7 @@ class FlashlightCard extends StatefulWidget {
   State<FlashlightCard> createState() => _FlashlightCardState();
 }
 
+// The widget uses StatefulWidget with SingleTickerProviderStateMixin to animate a pulsing flashlight button.
 class _FlashlightCardState extends State<FlashlightCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _pulseController;
@@ -33,6 +39,7 @@ class _FlashlightCardState extends State<FlashlightCard>
       vsync: this,
     );
 
+    // A Tween animation that changes the scale of the button from 0.8 to 1.2.
     _pulseAnimation = Tween<double>(
       begin: 0.8,
       end: 1.2,

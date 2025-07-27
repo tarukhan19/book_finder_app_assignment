@@ -10,6 +10,13 @@ import '../widgets/device_info_card.dart';
 import '../widgets/flashlight_card.dart';
 import '../widgets/sensor_card.dart';
 
+/*
+-- Fade Animation — Gradually shows the entire dashboard (opacity: 0 → 1)
+-- Slide Animation — Moves the whole UI upward (slide in from bottom)
+
+In the DashboardScreen, I use AnimationController with FadeTransition and SlideTransition to create smooth,
+responsive UI animations. Animations are initialized in initState using TickerProviderStateMixin and properly disposed.
+ */
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 

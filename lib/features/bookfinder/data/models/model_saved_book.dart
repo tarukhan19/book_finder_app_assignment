@@ -3,6 +3,16 @@ import 'package:hive/hive.dart';
 
 part 'model_saved_book.g.dart';
 
+/*
+@HiveType(typeId: 0): Marks the class as a Hive object and assigns it a unique typeId.
+This is required so Hive can serialize/deserialize it.
+Each class you store in Hive must have a unique type ID.
+
+Each field is annotated with @HiveField(index) which:
+Tells Hive how to store data
+The number must be unique and consistent across app versions
+ */
+
 @HiveType(typeId: 0)
 class SavedBookModel extends HiveObject {
   @HiveField(0)
@@ -36,7 +46,7 @@ class SavedBookModel extends HiveObject {
     this.firstPublishYear,
   });
 
-  // Convert from Book entity to SavedBookModel
+  // This factory constructor converts a BookEntity (domain) into a SavedBookModel
   factory SavedBookModel.fromBook(BookEntity book) {
     return SavedBookModel(
       id: _generateId(book),

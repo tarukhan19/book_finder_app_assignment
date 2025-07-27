@@ -2,6 +2,20 @@ import 'package:book_finder_app_assignment/features/bookfinder/domain/entities/e
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
+/*
+-- Animation Type:
+Rotates the sensor icon using Transform.rotate:
+
+-- How it's done:
+Uses AnimationController with SingleTickerProviderStateMixin.
+Rotates continuously (repeat()) when monitoring is active.
+Stops rotation and resets when monitoring is stopped.
+Managed using didUpdateWidget() to react to prop/state changes.
+
+-- Widget Involved:
+AnimatedBuilder + Transform.rotate = smooth spinning icon animation.
+
+ */
 class SensorCard extends StatefulWidget {
   final bool isSensorMonitoring;
   final SensorDataEntity? sensorData;

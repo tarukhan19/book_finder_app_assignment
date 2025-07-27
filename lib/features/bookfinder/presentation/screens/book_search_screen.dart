@@ -11,6 +11,26 @@ import '../widgets/shimmer_book_item.dart';
 import '../widgets/shimmer_book_list.dart';
 import '../widgets/widget_search_bar.dart';
 
+
+/*
+** The screen consists of:
+-- A StatelessWidget (BookSearchScreen) that provides the BookSearchBloc.
+-- A StatefulWidget (SearchPageView) that handles scrolling and loads UI based on the current state of the BLoC.
+    -> Multiple _View classes that render different UI depending on the state:
+    _InitialView,
+    _LoadingView,
+    _LoadedView,'
+    _LoadingMoreView,
+    _ErrorView
+** Scroll controller tracks scroll position, _onScroll() detects if user is near bottom
+-- if (!_scrollController.hasClients)	-> ensures the scroll controller is attached to a
+   Scrollable widget like ListView. If not, we can’t calculate scroll positions.
+-- maxScroll -> This is the maximum scrollable height
+-- currentScroll -> This is the current scroll position (i.e., how far the user has scrolled).
+-- currentScroll >= (maxScroll * 0.9) -> If user has scrolled 90% or more of the total scroll height,
+                                         we consider they're "near the bottom".
+-- _isLoadingMore	Check if BLoC is currently fetching more books
+ */
 class BookSearchScreen extends StatelessWidget {
   const BookSearchScreen({super.key});
 
@@ -66,6 +86,7 @@ class _SearchPageViewState extends State<SearchPageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
         title: const Text(
@@ -257,12 +278,14 @@ class _LoadedView extends StatelessWidget {
         physics: const AlwaysScrollableScrollPhysics(),
         itemCount: state.books.length + (state.hasReachedMax ? 0 : 1),
         itemBuilder: (context, index) {
+          // If index is past the current list size, show a loading shimmer to simulate more books loading.
           if (index >= state.books.length) {
             return const Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(4.0),
               child: ShimmerBookItem(),
             );
           }
+          // Otherwise, show a BookCardWidget for the corresponding book.
           return BookCardWidget(book: state.books[index]);
         },
       ),
@@ -287,7 +310,7 @@ class _LoadingMoreView extends StatelessWidget {
       child: ListView.builder(
         controller: scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
-        itemCount: state.books.length + 1,
+        itemCount: state.books.length + 1, // <-- +1 for shimmer
         itemBuilder: (context, index) {
           if (index >= state.books.length) {
             return const Padding(

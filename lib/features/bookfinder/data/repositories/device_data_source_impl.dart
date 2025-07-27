@@ -67,17 +67,24 @@ class DeviceDataSourceImpl implements DeviceRepository {
       if (_isFlashlightOn) {
         await TorchLight.disableTorch();
         _isFlashlightOn = false;
-        print('🔦 Flashlight turned OFF');
+        print(' Flashlight turned OFF');
       } else {
         await TorchLight.enableTorch();
         _isFlashlightOn = true;
-        print('🔦 Flashlight turned ON');
+        print(' Flashlight turned ON');
       }
     } on EnableTorchException catch (e) {
       print('TorchLight error: $e');
       throw 'Flashlight error: ${e.toString()}. This might be due to: 1) Testing on emulator, 2) Missing camera permission, 3) Hardware not supported.';
     }
   }
+
+  /*
+  I expose a Stream<SensorDataEntity> by listening to the gyroscope sensor stream —
+  typically provided by a Flutter plugin or native integration.
+  I map each incoming GyroscopeEvent (containing x, y, z axis values) to a domain-level SensorDataEntity.
+  This ensures my domain and presentation layers are clean and not coupled to any plugin or platform-specific models.
+   */
 
   @override
   Stream<SensorDataEntity> getGyroscopeStream() {
