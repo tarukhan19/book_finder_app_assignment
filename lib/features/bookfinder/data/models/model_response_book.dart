@@ -2,7 +2,7 @@ import 'package:book_finder_app_assignment/features/bookfinder/data/models/model
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'response_book.g.dart';
+part 'model_response_book.g.dart';
 
 @JsonSerializable()
 class BookSearchResponseModel extends Equatable {

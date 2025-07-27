@@ -1,5 +1,5 @@
-import '../../data/models/sys_sensor_info.dart';
-import '../../data/models/sys_system_info.dart';
+import '../../data/models/model_sys_sensor.dart';
+import '../../data/models/model_sys_system.dart';
 
 abstract class DeviceRepository {
   Future<SystemInfoModel> getSystemInfo();

@@ -1,4 +1,4 @@
-import 'package:book_finder_app_assignment/features/bookfinder/data/models/response_book.dart';
+import 'package:book_finder_app_assignment/features/bookfinder/data/models/model_response_book.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';

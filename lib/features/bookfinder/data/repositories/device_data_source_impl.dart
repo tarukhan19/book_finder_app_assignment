@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:battery_plus/battery_plus.dart';
-import 'package:book_finder_app_assignment/features/bookfinder/data/models/sys_sensor_info.dart';
-import 'package:book_finder_app_assignment/features/bookfinder/data/models/sys_system_info.dart';
+import 'package:book_finder_app_assignment/features/bookfinder/data/models/model_sys_sensor.dart';
+import 'package:book_finder_app_assignment/features/bookfinder/data/models/model_sys_system.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:injectable/injectable.dart';
 import 'package:sensors_plus/sensors_plus.dart';
