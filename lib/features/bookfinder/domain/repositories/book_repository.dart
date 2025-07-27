@@ -1,6 +1,6 @@
 
-import '../entities/search_result.dart';
+import '../entities/entity_search_result.dart';
 
 abstract class BookRepository {
-  Future<BookSearchResult> searchBooks(String query , int page);
+  Future<BookSearchResultEntity> searchBooks(String query , int page);
 }

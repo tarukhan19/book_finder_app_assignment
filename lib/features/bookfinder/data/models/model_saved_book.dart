@@ -1,7 +1,7 @@
 import 'package:book_finder_app_assignment/features/bookfinder/domain/entities/entity_book.dart';
 import 'package:hive/hive.dart';
 
-part 'saved_book_model.g.dart';
+part 'model_saved_book.g.dart';
 
 @HiveType(typeId: 0)
 class SavedBookModel extends HiveObject {

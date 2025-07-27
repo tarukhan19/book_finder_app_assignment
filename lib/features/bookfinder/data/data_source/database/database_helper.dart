@@ -1,5 +1,5 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import '../../models/saved_book_model.dart';
+import '../../models/model_saved_book.dart';
 
 class HiveService {
   static HiveService? _instance;

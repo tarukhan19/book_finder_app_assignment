@@ -1,5 +1,4 @@
 import 'package:injectable/injectable.dart';
-
 import '../repositories/device_data_repository.dart';
 
 @lazySingleton

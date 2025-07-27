@@ -1,12 +1,9 @@
-import '../../data/models/sys_battery_info.dart';
-import '../../data/models/sys_sensor_info.dart';
-import '../../data/models/sys_system_info.dart';
+import '../entities/entity_info_sensor.dart';
+import '../entities/entity_info_system.dart';
 
 abstract class DeviceRepository {
-  Future<SystemInfoModel> getSystemInfo();
-  Future<BatteryInfoModel> getBatteryInfo();
+  Future<SystemInfoEntity> getSystemInfo();
   Future<void> toggleTorch(bool enabled);
   Future<bool> getTorchState();
-  Stream<SensorDataModel> getAccelerometerStream();
-  Stream<SensorDataModel> getGyroscopeStream();
+  Stream<SensorDataEntity> getGyroscopeStream();
 }

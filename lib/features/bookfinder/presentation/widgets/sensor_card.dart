@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import '../../domain/entities/entity_info_sensor.dart';
 import '../bloc/dashboard/dashboard_state.dart';
 
 class SensorCard extends StatefulWidget {
   final bool isSensorMonitoring;
-  final GyroscopeData? gyroscopeData;
-  final AccelerometerData? accelerometerData;
+  final SensorDataEntity? sensorDataEntity;
   final VoidCallback onStartMonitoring;
   final VoidCallback onStopMonitoring;
 
   const SensorCard({
     super.key,
     required this.isSensorMonitoring,
-    this.gyroscopeData,
-    this.accelerometerData,
+    this.sensorDataEntity,
     required this.onStartMonitoring,
     required this.onStopMonitoring,
   });
@@ -153,25 +152,16 @@ class _SensorCardState extends State<SensorCard>
               const SizedBox(height: 20),
 
               // Gyroscope Data
-              if (widget.gyroscopeData != null) ...[
+              if (widget.sensorDataEntity != null) ...[
                 _buildSensorSection(
                   title: 'Gyroscope',
                   icon: Icons.rotate_right,
-                  data: widget.gyroscopeData!,
+                  data: widget.sensorDataEntity!,
                   color: Colors.blue,
                 ),
                 const SizedBox(height: 16),
               ],
 
-              // Accelerometer Data
-              if (widget.accelerometerData != null) ...[
-                _buildSensorSection(
-                  title: 'Accelerometer',
-                  icon: Icons.speed,
-                  data: widget.accelerometerData!,
-                  color: Colors.purple,
-                ),
-              ],
             ] else ...[
               const SizedBox(height: 20),
               Center(
@@ -208,11 +198,7 @@ class _SensorCardState extends State<SensorCard>
   }) {
     double x, y, z, magnitude;
 
-    if (data is GyroscopeData) {
-      x = data.x;
-      y = data.y;
-      z = data.z;
-    } else if (data is AccelerometerData) {
+    if (data is SensorDataEntity) {
       x = data.x;
       y = data.y;
       z = data.z;

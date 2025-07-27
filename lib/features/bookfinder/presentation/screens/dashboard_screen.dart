@@ -134,7 +134,7 @@ class _DashboardViewState extends State<DashboardView>
                 const SizedBox(height: 24),
 
                 // Device Information Card
-                DeviceInfoCard(deviceInfo: state.deviceInfo),
+                DeviceInfoCard(systemInfo: state.systemInfo),
                 const SizedBox(height: 16),
 
                 // Flashlight Control Card
@@ -150,8 +150,7 @@ class _DashboardViewState extends State<DashboardView>
                 // Sensor Data Card
                 SensorCard(
                   isSensorMonitoring: state.isSensorMonitoring,
-                  gyroscopeData: state.gyroscopeData,
-                  accelerometerData: state.accelerometerData,
+                  sensorDataEntity: state.sensorData,
                   onStartMonitoring: () {
                     context.read<DashboardBloc>().add(const StartSensorMonitoringEvent());
                   },
@@ -194,7 +193,7 @@ class _DashboardViewState extends State<DashboardView>
           Row(
             children: [
               Icon(
-                _getPlatformIcon(state.deviceInfo.platform),
+                _getPlatformIcon(state.systemInfo.platform),
                 color: Colors.white,
                 size: 32,
               ),
@@ -212,27 +211,13 @@ class _DashboardViewState extends State<DashboardView>
                       ),
                     ),
                     Text(
-                      'Monitoring ${state.deviceInfo.deviceName}',
+                      'Monitoring ${state.systemInfo.deviceModel}',
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.9),
                         fontSize: 14,
                       ),
                     ),
                   ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  '${state.deviceInfo.batteryLevel}%',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
                 ),
               ),
             ],
@@ -283,40 +268,7 @@ class _DashboardViewState extends State<DashboardView>
 
   Widget _buildInitialView() {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.dashboard,
-            size: 80,
-            color: Colors.grey.shade400,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Dashboard Ready',
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.grey.shade600,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () {
-              context.read<DashboardBloc>().add(const LoadDashboardDataEvent());
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25),
-              ),
-            ),
-            child: const Text('Load Dashboard'),
-          ),
-        ],
-      ),
+      child: Text("Dashboard loading..")
     );
   }
 }

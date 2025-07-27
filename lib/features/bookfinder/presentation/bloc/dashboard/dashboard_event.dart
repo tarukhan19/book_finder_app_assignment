@@ -1,10 +1,7 @@
-import '../../../domain/entities/info_sensor.dart';
+import '../../../domain/entities/entity_info_sensor.dart';
 
 abstract class DashboardEvent {
   const DashboardEvent();
-
-  @override
-  List<Object> get props => [];
 }
 
 class LoadDashboardDataEvent extends DashboardEvent {
@@ -24,7 +21,7 @@ class StopSensorMonitoringEvent extends DashboardEvent {
 }
 
 class UpdateAccelerometerDataEvent extends DashboardEvent {
-  final SensorData data;
+  final SensorDataEntity data;
   const UpdateAccelerometerDataEvent(this.data);
 }
 
@@ -39,6 +36,4 @@ class UpdateGyroscopeDataEvent extends DashboardEvent {
     required this.z,
   });
 
-  @override
-  List<Object> get props => [x, y, z];
 }

@@ -23,15 +23,12 @@ class MainActivity: FlutterActivity(), SensorEventListener {
 
     companion object {
         private const val CHANNEL = "device_features"
-        private const val ACCELEROMETER_CHANNEL = "accelerometer_stream"
         private const val GYROSCOPE_CHANNEL = "gyroscope_stream"
     }
 
     // Sensor related variables
     private lateinit var sensorManager: SensorManager
-    private var accelerometer: Sensor? = null
     private var gyroscope: Sensor? = null
-    private var accelerometerEventSink: EventChannel.EventSink? = null
     private var gyroscopeEventSink: EventChannel.EventSink? = null
     private var isSensorListening = false
 
@@ -51,7 +48,7 @@ class MainActivity: FlutterActivity(), SensorEventListener {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
             when (call.method) {
                 "getSystemInfo" -> getSystemInfo(result)
-                "getBatteryInfo" -> getBatteryInfo(result)
+                "getBatteryInfo" -> getBatteryInfo()
                 "toggleTorch" -> {
                     val enabled = call.argument<Boolean>("enabled") ?: false
                     toggleTorch(enabled, result)
@@ -68,13 +65,12 @@ class MainActivity: FlutterActivity(), SensorEventListener {
     }
 
     private fun initializeSensors() {
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
     }
 
     private fun initializeCamera() {
-        cameraManager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
+        cameraManager = getSystemService(CAMERA_SERVICE) as CameraManager
         try {
             // Get the first camera with a flash
             for (id in cameraManager.cameraIdList) {
@@ -99,7 +95,7 @@ class MainActivity: FlutterActivity(), SensorEventListener {
                 "osVersion" to Build.VERSION.RELEASE,
                 "platform" to "Android",
                 "appVersion" to getAppVersion(),
-                "timestamp" to System.currentTimeMillis()
+                "batteryInfo" to getBatteryInfo()
             )
             result.success(systemInfo)
         } catch (e: Exception) {
@@ -107,35 +103,13 @@ class MainActivity: FlutterActivity(), SensorEventListener {
         }
     }
 
-    private fun getBatteryInfo(result: MethodChannel.Result) {
-        try {
-            val batteryManager = getSystemService(Context.BATTERY_SERVICE) as BatteryManager
+    private fun getBatteryInfo(): String {
+        return try {
+            val batteryManager = getSystemService(BATTERY_SERVICE) as BatteryManager
             val batteryLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
-
-            val intentFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-            val batteryStatus = registerReceiver(null, intentFilter)
-
-            val status = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
-            val isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                    status == BatteryManager.BATTERY_STATUS_FULL
-
-            val batteryState = when (status) {
-                BatteryManager.BATTERY_STATUS_CHARGING -> "charging"
-                BatteryManager.BATTERY_STATUS_DISCHARGING -> "discharging"
-                BatteryManager.BATTERY_STATUS_FULL -> "full"
-                BatteryManager.BATTERY_STATUS_NOT_CHARGING -> "not_charging"
-                else -> "unknown"
-            }
-
-            val batteryInfo = mapOf(
-                "batteryLevel" to batteryLevel,
-                "batteryState" to batteryState,
-                "isCharging" to isCharging
-            )
-
-            result.success(batteryInfo)
+            batteryLevel.toString()
         } catch (e: Exception) {
-            result.error("BATTERY_INFO_ERROR", "Failed to get battery info: ${e.message}", null)
+            "Failed to get battery info: ${e.message}"
         }
     }
 
@@ -167,11 +141,6 @@ class MainActivity: FlutterActivity(), SensorEventListener {
 
             var registered = false
 
-            accelerometer?.let { sensor ->
-                sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI)
-                registered = true
-            }
-
             gyroscope?.let { sensor ->
                 sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI)
                 registered = true
@@ -201,25 +170,6 @@ class MainActivity: FlutterActivity(), SensorEventListener {
     }
 
     private fun setupSensorChannels(flutterEngine: FlutterEngine) {
-        // Accelerometer Event Channel
-        EventChannel(flutterEngine.dartExecutor.binaryMessenger, ACCELEROMETER_CHANNEL)
-            .setStreamHandler(object : EventChannel.StreamHandler {
-                override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
-                    accelerometerEventSink = events
-                    // Only register accelerometer
-                    accelerometer?.let {
-                        sensorManager.registerListener(this@MainActivity, it, SensorManager.SENSOR_DELAY_UI)
-                    }
-                }
-
-                override fun onCancel(arguments: Any?) {
-                    accelerometerEventSink = null
-                    // Only unregister accelerometer
-                    accelerometer?.let {
-                        sensorManager.unregisterListener(this@MainActivity, it)
-                    }
-                }
-            })
 
         // Gyroscope Event Channel
         EventChannel(flutterEngine.dartExecutor.binaryMessenger, GYROSCOPE_CHANNEL)
@@ -254,12 +204,8 @@ class MainActivity: FlutterActivity(), SensorEventListener {
 
             // Run on main thread to avoid threading issues
             Handler(Looper.getMainLooper()).post {
-                Log.e("SensorData", "Accelerometer: $sensorData")
-
                 when (sensorEvent.sensor?.type) {
-                    Sensor.TYPE_ACCELEROMETER -> {
-                        accelerometerEventSink?.success(sensorData)
-                    }
+
                     Sensor.TYPE_GYROSCOPE -> {
                         gyroscopeEventSink?.success(sensorData)
                     }
@@ -269,7 +215,7 @@ class MainActivity: FlutterActivity(), SensorEventListener {
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        // Handle accuracy changes if needed
+        // not required
     }
 
     private fun getAppVersion(): String {

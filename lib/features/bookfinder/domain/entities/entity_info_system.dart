@@ -1,22 +1,22 @@
-class SystemInfoModel {
+class SystemInfoEntity {
   final String deviceModel;
   final String osVersion;
   final String platform;
-  final String appVersion;
+  final String batteryLevel;
 
-  SystemInfoModel({
+  SystemInfoEntity({
     required this.deviceModel,
     required this.osVersion,
     required this.platform,
-    required this.appVersion,
+    required this.batteryLevel,
   });
 
-  factory SystemInfoModel.fromMap(Map<String, dynamic> map) {
-    return SystemInfoModel(
+  factory SystemInfoEntity.fromMap(Map<String, dynamic> map) {
+    return SystemInfoEntity(
       deviceModel: map['deviceModel'] ?? '',
       osVersion: map['osVersion'] ?? '',
       platform: map['platform'] ?? '',
-      appVersion: map['appVersion'] ?? '',
+      batteryLevel: map['batteryInfo'] ?? '',
     );
   }
 }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import '../../domain/entities/entity_info_system.dart';
 import '../bloc/dashboard/dashboard_state.dart';
 
 class DeviceInfoCard extends StatelessWidget {
-  final DeviceInfo deviceInfo;
+  final SystemInfoEntity systemInfo;
 
-  const DeviceInfoCard({super.key, required this.deviceInfo});
+  const DeviceInfoCard({super.key, required this.systemInfo});
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +54,6 @@ class DeviceInfoCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                _buildBatteryIndicator(),
               ],
             ),
             const SizedBox(height: 20),
@@ -62,78 +62,32 @@ class DeviceInfoCard extends StatelessWidget {
             _buildInfoRow(
               icon: Icons.smartphone,
               label: 'Device',
-              value: deviceInfo.deviceName,
-            ),
-            const SizedBox(height: 12),
-            _buildInfoRow(
-              icon: Icons.memory,
-              label: 'Model',
-              value: deviceInfo.brand,
+              value: systemInfo.deviceModel,
             ),
             const SizedBox(height: 12),
 
             _buildInfoRow(
               icon: Icons.system_security_update,
               label: 'OS Version',
-              value: deviceInfo.osVersion,
+              value: systemInfo.osVersion,
             ),
             const SizedBox(height: 12),
 
             _buildInfoRow(
               icon: Icons.computer,
               label: 'Platform',
-              value: deviceInfo.platform,
+              value: systemInfo.platform,
+            ),
+
+            const SizedBox(height: 12),
+
+            _buildInfoRow(
+              icon: Icons.battery_1_bar,
+              label: 'Battery',
+              value: "${systemInfo.batteryLevel}%",
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildBatteryIndicator() {
-    final batteryLevel = deviceInfo.batteryLevel;
-    Color batteryColor;
-    IconData batteryIcon;
-
-    if (batteryLevel > 75) {
-      batteryColor = Colors.green;
-      batteryIcon = Icons.battery_full;
-    } else if (batteryLevel > 50) {
-      batteryColor = Colors.orange;
-      batteryIcon = Icons.battery_5_bar;
-    } else if (batteryLevel > 25) {
-      batteryColor = Colors.orange.shade700;
-      batteryIcon = Icons.battery_3_bar;
-    } else {
-      batteryColor = Colors.red;
-      batteryIcon = Icons.battery_1_bar;
-    }
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: batteryColor.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: batteryColor.withOpacity(0.3)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            batteryIcon,
-            color: batteryColor,
-            size: 18,
-          ),
-          const SizedBox(width: 6),
-          Text(
-            '$batteryLevel%',
-            style: TextStyle(
-              color: batteryColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-            ),
-          ),
-        ],
       ),
     );
   }

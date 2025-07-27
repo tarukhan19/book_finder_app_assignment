@@ -25,8 +25,6 @@ import 'package:book_finder_app_assignment/features/bookfinder/domain/repositori
     as _i393;
 import 'package:book_finder_app_assignment/features/bookfinder/domain/repositories/saved_books_repository.dart'
     as _i270;
-import 'package:book_finder_app_assignment/features/bookfinder/domain/usecase/get_battery_use_case.dart'
-    as _i116;
 import 'package:book_finder_app_assignment/features/bookfinder/domain/usecase/get_info_use_case.dart'
     as _i583;
 import 'package:book_finder_app_assignment/features/bookfinder/domain/usecase/get_sensor_use_case.dart'
@@ -76,8 +74,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i583.GetSystemInfoUseCase(gh<_i393.DeviceRepository>()));
     gh.lazySingleton<_i541.GetSensorDataUseCase>(
         () => _i541.GetSensorDataUseCase(gh<_i393.DeviceRepository>()));
-    gh.lazySingleton<_i116.GetBatteryInfoUseCase>(
-        () => _i116.GetBatteryInfoUseCase(gh<_i393.DeviceRepository>()));
     gh.lazySingleton<_i805.SaveBookUseCase>(
         () => _i805.SaveBookUseCase(gh<_i270.SavedBooksRepository>()));
     gh.lazySingleton<_i805.RemoveSavedBookUseCase>(
@@ -91,15 +87,14 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i805.RemoveSavedBookUseCase>(),
           gh<_i805.IsBookSavedUseCase>(),
         ));
-    gh.lazySingleton<_i810.SearchBooksUseCase>(
-        () => _i810.SearchBooksUseCase(gh<_i539.BookRepository>()));
     gh.factory<_i895.DashboardBloc>(() => _i895.DashboardBloc(
           getSystemInfoUseCase: gh<_i583.GetSystemInfoUseCase>(),
-          getBatteryInfoUseCase: gh<_i116.GetBatteryInfoUseCase>(),
           toggleTorchUseCase: gh<_i204.ToggleTorchUseCase>(),
           getTorchStateUseCase: gh<_i204.GetTorchStateUseCase>(),
           getSensorDataUseCase: gh<_i541.GetSensorDataUseCase>(),
         ));
+    gh.lazySingleton<_i810.SearchBooksUseCase>(
+        () => _i810.SearchBooksUseCase(gh<_i539.BookRepository>()));
     gh.factory<_i63.BookSearchBloc>(
         () => _i63.BookSearchBloc(gh<_i810.SearchBooksUseCase>()));
     return this;

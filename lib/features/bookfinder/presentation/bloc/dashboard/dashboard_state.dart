@@ -1,3 +1,6 @@
+import 'package:book_finder_app_assignment/features/bookfinder/domain/entities/entity_info_sensor.dart';
+import '../../../domain/entities/entity_info_system.dart';
+
 abstract class DashboardState {
   const DashboardState();
 }
@@ -7,81 +10,37 @@ class DashboardInitial extends DashboardState {
 }
 
 class DashboardLoaded extends DashboardState {
-  final DeviceInfo deviceInfo;
+  final SystemInfoEntity systemInfo;
   final bool isFlashlightOn;
   final bool isFlashlightAvailable;
   final bool isSensorMonitoring;
-  final GyroscopeData? gyroscopeData;
-  final AccelerometerData? accelerometerData;
+  final SensorDataEntity? sensorData;
 
   const DashboardLoaded({
-    required this.deviceInfo,
+    required this.systemInfo,
     required this.isFlashlightOn,
     required this.isFlashlightAvailable,
     required this.isSensorMonitoring,
-    this.gyroscopeData,
-    this.accelerometerData,
+    this.sensorData,
   });
 
   DashboardLoaded copyWith({
-    DeviceInfo? deviceInfo,
+    SystemInfoEntity? systemInfo,
     bool? isFlashlightOn,
     bool? isFlashlightAvailable,
     bool? isSensorMonitoring,
-    GyroscopeData? gyroscopeData,
-    AccelerometerData? accelerometerData,
+    SensorDataEntity? sensorData,
   }) {
     return DashboardLoaded(
-      deviceInfo: deviceInfo ?? this.deviceInfo,
+      systemInfo: systemInfo ?? this.systemInfo,
       isFlashlightOn: isFlashlightOn ?? this.isFlashlightOn,
       isFlashlightAvailable: isFlashlightAvailable ?? this.isFlashlightAvailable,
       isSensorMonitoring: isSensorMonitoring ?? this.isSensorMonitoring,
-      gyroscopeData: gyroscopeData ?? this.gyroscopeData,
-      accelerometerData: accelerometerData ?? this.accelerometerData,
+      sensorData: sensorData ?? this.sensorData,
     );
   }
 }
 
 class DashboardError extends DashboardState {
   const DashboardError({required String message});
-}
-
-class DeviceInfo {
-  final String deviceName;
-  final String brand;
-  final String osVersion;
-  final String platform;
-  final int batteryLevel;
-
-  DeviceInfo({
-    required this.deviceName,
-    required this.brand,
-    required this.osVersion,
-    required this.platform,
-    required this.batteryLevel,
-  });
-}
-
-class GyroscopeData {
-  final double x;
-  final double y;
-  final double z;
-
-  GyroscopeData({
-    required this.x,
-    required this.y,
-    required this.z,
-  });
-}
-
-class AccelerometerData {
-  final double x;
-  final double y;
-  final double z;
-
-  AccelerometerData({
-    required this.x,
-    required this.y,
-    required this.z,
-  });
 }
