@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:battery_plus/battery_plus.dart';
-import 'package:book_finder_app_assignment/features/bookfinder/data/models/model_sys_sensor.dart';
-import 'package:book_finder_app_assignment/features/bookfinder/data/models/model_sys_system.dart';
+import 'package:book_finder_app_assignment/features/bookfinder/domain/entities/entity_info_sensor.dart';
+import 'package:book_finder_app_assignment/features/bookfinder/domain/entities/entity_info_system.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:injectable/injectable.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -16,13 +16,13 @@ class DeviceDataSourceImpl implements DeviceRepository {
   bool _isFlashlightOn = false;
 
   @override
-  Future<SystemInfoModel> getSystemInfo() async {
+  Future<SystemInfoEntity> getSystemInfo() async {
     try {
       if (Platform.isAndroid) {
         final androidInfo = await _deviceInfo.androidInfo;
         final batteryLevel = await _battery.batteryLevel;
 
-        return SystemInfoModel(
+        return SystemInfoEntity(
           deviceModel: androidInfo.model,
           osVersion: 'Android ${androidInfo.version.release}',
           batteryLevel: batteryLevel,
@@ -32,7 +32,7 @@ class DeviceDataSourceImpl implements DeviceRepository {
         final iosInfo = await _deviceInfo.iosInfo;
         final batteryLevel = await _battery.batteryLevel;
 
-        return SystemInfoModel(
+        return SystemInfoEntity(
           deviceModel: iosInfo.model,
           osVersion: 'iOS ${iosInfo.systemVersion}',
           batteryLevel: batteryLevel,
@@ -80,9 +80,9 @@ class DeviceDataSourceImpl implements DeviceRepository {
   }
 
   @override
-  Stream<SensorDataModel> getGyroscopeStream() {
+  Stream<SensorDataEntity> getGyroscopeStream() {
     return gyroscopeEventStream().map(
-          (event) => SensorDataModel(x: event.x, y: event.y, z: event.z),
+          (event) => SensorDataEntity(x: event.x, y: event.y, z: event.z),
     );
   }
 }

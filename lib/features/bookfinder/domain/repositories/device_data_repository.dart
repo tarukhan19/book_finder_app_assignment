@@ -1,9 +1,9 @@
-import '../../data/models/model_sys_sensor.dart';
-import '../../data/models/model_sys_system.dart';
+import 'package:book_finder_app_assignment/features/bookfinder/domain/entities/entity_info_sensor.dart';
+import 'package:book_finder_app_assignment/features/bookfinder/domain/entities/entity_info_system.dart';
 
 abstract class DeviceRepository {
-  Future<SystemInfoModel> getSystemInfo();
+  Future<SystemInfoEntity> getSystemInfo();
   Future<void> toggleTorch(bool enabled);
    Future<bool> getTorchState();
-  Stream<SensorDataModel> getGyroscopeStream();
+  Stream<SensorDataEntity> getGyroscopeStream();
 }
